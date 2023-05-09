@@ -7,7 +7,7 @@ import {name as appName} from './app.json';
 // import SignUp from './src/screen/SignUp';
 // import Login from './src/screen/Login';
 // import Forgot from './src/screen/Forgot';
-// import App from './App';
-import Router from './router';
+import App from './App';
+// import Router from './router';
 
-AppRegistry.registerComponent(appName, () => Router);
+AppRegistry.registerComponent(appName, () => App);

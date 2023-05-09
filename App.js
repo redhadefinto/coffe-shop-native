@@ -1,13 +1,15 @@
-// import React from 'react';
-// import {NavigationContainer} from '@react-navigation/native';
-// import Router from './src/router/index';
+import * as React from 'react';
+import {SafeAreaView, Text} from 'react-native';
+import {DrawerActions, NavigationContainer} from '@react-navigation/native';
 
-// function App() {
-//   return (
-//     <NavigationContainer>
-//       <Router />
-//     </NavigationContainer>
-//   );
-// }
+import AuthNavigator from './src/navigations/AuthNavigator';
 
-// export default App;
+export default function App() {
+  // isAuthenticated = is...
+  return (
+    <NavigationContainer>
+      {/* {isAuthenticated ? AuthNavigator : DrawerNavigator } */}
+      <AuthNavigator />
+    </NavigationContainer>
+  );
+}

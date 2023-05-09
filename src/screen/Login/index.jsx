@@ -8,10 +8,12 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-
+// import {COLORS, ROUTES} from '../../constants';
 import bgLogin from '../../assets/background/login-page.png';
 import iconGoogle from '../../assets/icon/icon-google.png';
 import {useNavigation} from '@react-navigation/native';
+// import routes from '../../constans/routes';
+import {COLORS, ROUTES} from '../../constans';
 
 const Login = () => {
   const [buttonPressedRegist, setButtonPressedRegist] = useState(false);
@@ -52,7 +54,7 @@ const Login = () => {
               onPressIn={() => setButtonPressedRegist(true)}
               onPressOut={() => setButtonPressedRegist(false)}
               onPress={() => {
-                navigation.navigate('DrawerNavigator');
+                navigation.navigate(ROUTES.HOME);
               }}>
               <Text style={[styles.textButton, styles.colorBtnRegist]}>
                 Login
