@@ -6,9 +6,13 @@ import {
   ImageBackground,
 } from 'react-native';
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 const CardHome = ({title, price, image}) => {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity style={styles.containerProduct}>
+    <TouchableOpacity
+      style={styles.containerProduct}
+      onPress={() => navigation.navigate('ProductDetail')}>
       <View style={styles.containerImage}>
         <ImageBackground
           source={image}
