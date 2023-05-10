@@ -189,7 +189,11 @@ const Cart = () => {
           </Text>
         </View>
         <View style={{paddingTop: 20, paddingBottom: 120}}>
-          <TouchableOpacity onPress={handleCheckout} activeOpacity={0.8}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Delivery', {total});
+            }}
+            activeOpacity={0.8}>
             <View
               style={{
                 marginVertical: 15,

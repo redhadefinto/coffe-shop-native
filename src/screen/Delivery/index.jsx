@@ -1,4 +1,11 @@
-import {View, ScrollView, Text, Pressable, StyleSheet} from 'react-native';
+import {
+  View,
+  ScrollView,
+  Text,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useState} from 'react';
 import {NativeBaseProvider, Radio} from 'native-base';
 // import ButtonSecondary from '../../components/ButtonSecondary';
@@ -6,6 +13,7 @@ import globalStyle from '../../styles/global';
 import {useDispatch} from 'react-redux';
 // import {cartAction, cartActions} from '../../redux/slices/cart';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {cartActions} from '../../redux/slices/cart';
 const Delivery = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();

@@ -23,6 +23,7 @@ import Cart from './src/screen/Cart';
 import Chat from './src/screen/Chat';
 import ProductAll from './src/screen/ProductAll';
 import Delivery from './src/screen/Delivery';
+import Payment from './src/screen/Payment';
 
 const DrawerNavigator = props => {
   const {Navigator, Screen} = createDrawerNavigator();
@@ -283,6 +284,7 @@ const StackNavigator = () => {
       <Screen name="Cart" component={Cart} />
       <Screen name="Chat" component={Chat} />
       <Screen name="Delivery" component={Delivery} />
+      <Screen name="Payment" component={Payment} />
     </Navigator>
   );
 };

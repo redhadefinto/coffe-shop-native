@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, {useEffect, useState} from 'react';
 
 import styles from '../../styles/Profile';
@@ -206,3 +207,19 @@ function Profile() {
 }
 
 export default Profile;
+=======
+import {StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+
+const Profile = () => {
+  return (
+    <View>
+      <Text>Profile</Text>
+    </View>
+  );
+};
+
+export default Profile;
+
+const styles = StyleSheet.create({});
+>>>>>>> 8a77d586cc030efa552b475fd6b08084f6b73dcd

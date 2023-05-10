@@ -10,6 +10,7 @@ import {name as appName} from './app.json';
 // import SignUp from './src/screen/SignUp';
 // import Login from './src/screen/Login';
 // import Forgot from './src/screen/Forgot';
+<<<<<<< HEAD
 // import App from './App';
 import Router from './router';
 import {Provider} from 'react-redux';
@@ -24,3 +25,9 @@ const AppWithRedux = () => (
 );
 
 AppRegistry.registerComponent(appName, () => AppWithRedux);
+=======
+import App from './App';
+// import Router from './router';
+
+AppRegistry.registerComponent(appName, () => App);
+>>>>>>> 8a77d586cc030efa552b475fd6b08084f6b73dcd

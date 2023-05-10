@@ -9,6 +9,7 @@ import {
   TextInput,
   ToastAndroid,
 } from 'react-native';
+<<<<<<< HEAD
 import {useDispatch} from 'react-redux';
 import bgLogin from '../../assets/background/login-page.png';
 import iconGoogle from '../../assets/icon/icon-google.png';
@@ -16,6 +17,15 @@ import {useNavigation} from '@react-navigation/native';
 import {authAction} from '../../redux/slices/auth';
 import {profileAction} from '../../redux/slices/profile';
 import Loaders from '../../components/Loaders';
+=======
+// import {COLORS, ROUTES} from '../../constants';
+import bgLogin from '../../assets/background/login-page.png';
+import iconGoogle from '../../assets/icon/icon-google.png';
+import {useNavigation} from '@react-navigation/native';
+// import routes from '../../constans/routes';
+import {COLORS, ROUTES} from '../../constans';
+
+>>>>>>> 8a77d586cc030efa552b475fd6b08084f6b73dcd
 const Login = () => {
   const controller = React.useMemo(() => new AbortController(), []);
   const controllerProfile = React.useMemo(() => new AbortController(), []);
@@ -113,7 +123,13 @@ const Login = () => {
               activeOpacity={0.9}
               onPressIn={() => setButtonPressedRegist(true)}
               onPressOut={() => setButtonPressedRegist(false)}
+<<<<<<< HEAD
               onPress={loginHandler}>
+=======
+              onPress={() => {
+                navigation.navigate(ROUTES.HOME);
+              }}>
+>>>>>>> 8a77d586cc030efa552b475fd6b08084f6b73dcd
               <Text style={[styles.textButton, styles.colorBtnRegist]}>
                 Login
               </Text>
