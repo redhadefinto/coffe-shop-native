@@ -6,12 +6,74 @@ const styles = StyleSheet.create({
     backgroundColor: '#EEEEEE',
     padding: 30,
     flexDirection: 'row',
-    // alignItems: 'center'
+    alignItems: 'center',
+  },
+  containerSearch: {
+    width: '90%',
+    alignSelf: 'center',
+    backgroundColor: '#EFEEEE',
+    marginTop: 20,
+    borderRadius: 50,
+    position: 'relative',
+    flexDirection: 'row',
+  },
+  borderSearch: {
+    borderWidth: 2,
+  },
+  inputSearch: {
+    width: '90%',
+    fontSize: 17,
+    paddingHorizontal: 70,
+    paddingVertical: 15,
+    fontWeight: '900',
+    borderRadius: 50,
+  },
+  searchIcon: {
+    width: 30,
+    height: 30,
+    position: 'absolute',
+    top: '24%',
+    left: '8%',
+  },
+  categories: {
+    // marginTop: ,
+    minWidth: '100%',
+    flexDirection: 'row',
+    height: 70,
+    overflow: 'scroll',
+    // borderWidth: 1,
+    // paddingRight: 40,
+  },
+  categoriesTitle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 20,
+  },
+  categoriesText: {
+    fontSize: 17,
+  },
+  textActive: {
+    color: '#6A4029',
+    fontWeight: '900',
+    borderBottomWidth: 2,
+  },
+  icon: {
+    color: 'black',
+    // fontSize: 22,
+    fontWeight: '800',
+  },
+  textNavbar: {
+    color: 'black',
+    fontSize: 22,
+    fontWeight: '800',
+    marginLeft: 20,
   },
   scrolles: {
     flex: 1,
     backgroundColor: '#F9F9F9',
     minHeight: '200%',
+    paddingBottom: '30%',
   },
   icons: {
     marginRight: 30,
@@ -50,6 +112,7 @@ const styles = StyleSheet.create({
     paddingTop: 25,
     // gap: 25,
     marginHorizontal: 20,
+    minHeight: 200,
   },
   card: {
     backgroundColor: '#FFFFFF',

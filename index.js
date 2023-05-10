@@ -1,3 +1,6 @@
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable no-undef */
+/* eslint-disable prettier/prettier */
 import 'react-native-gesture-handler';
 import {AppRegistry} from 'react-native';
 // import App from './App';
@@ -9,5 +12,15 @@ import {name as appName} from './app.json';
 // import Forgot from './src/screen/Forgot';
 // import App from './App';
 import Router from './router';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import store, {persistor} from './src/redux/store';
+const AppWithRedux = () => (
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <Router />
+    </PersistGate>
+  </Provider>
+);
 
-AppRegistry.registerComponent(appName, () => Router);
+AppRegistry.registerComponent(appName, () => AppWithRedux);

@@ -5,14 +5,21 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#362115',
     flex: 1,
+    minHeight: '200%',
   },
   navbar: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     paddingLeft: 30,
     paddingRight: 30,
     paddingTop: 40,
+  },
+  textNavbar: {
+    color: 'white',
+    fontSize: 22,
+    fontWeight: '800',
+    marginLeft: 20,
   },
   icon: {
     color: 'white',
@@ -23,6 +30,8 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginTop: 100,
     borderTopRightRadius: 75,
+    minHeight: 1000,
+    paddingBottom: '25%',
   },
   product: {
     width: 170,
@@ -42,9 +51,11 @@ const styles = StyleSheet.create({
   },
   Title: {
     fontFamily: 'Poppins-Bold',
-    fontSize: 28,
+    fontSize: 37,
     color: 'black',
-    paddingRight: 10,
+    paddingRight: 30,
+    marginTop: 10,
+    fontWeight: '900',
   },
   bottom: {
     paddingTop: 180,
@@ -116,6 +127,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: 'black',
     paddingTop: 10,
+    fontWeight: '700',
   },
   priceTextDisount: {
     fontFamily: 'Poppins-Bold',

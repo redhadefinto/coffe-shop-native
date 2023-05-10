@@ -1,7 +1,7 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import HumburgerPng from '../../assets/icon/humburger.png';
-import shippingCartPng from '../../assets/icon/shopping-cart.png';
+import shippingCartPng from '../../assets/icon/cart_inactive.png';
 import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 // import {Image} from 'react-native-svg';
@@ -14,7 +14,7 @@ const Navbar = () => {
         <Image source={HumburgerPng} style={{width: 25, height: 25}} />
       </TouchableOpacity>
       <View>
-        <Image source={shippingCartPng} style={{width: 40, height: 40}} />
+        <Image source={shippingCartPng} style={{width: 30, height: 30}} />
       </View>
     </View>
   );

@@ -24,10 +24,16 @@ const CardProduct = ({image, name, price, id, index}) => {
     );
   };
   return (
-    <Pressable style={styles.card}>
+    <Pressable
+      style={styles.card}
+      onPress={() =>
+        navigation.navigate('ProductDetail', {
+          prodId: id,
+        })
+      }>
       <View style={styles.containerImage} key={random}>
         <ImageBackground
-          source={image}
+          source={{uri: image}}
           style={styles.imageCard}
           resizeMode="cover"
         />

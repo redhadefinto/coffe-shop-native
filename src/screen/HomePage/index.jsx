@@ -5,8 +5,9 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import Navbar from '../../components/Navbar';
 import searchIcon from '../../assets/icon/icon-search.png';
 import {ScrollView, TextInput} from 'react-native-gesture-handler';
@@ -16,11 +17,31 @@ import coffe3 from '../../assets/Products/coffe-3.png';
 // import {BottomTabs, DrawerNavigator} from '../../../router';
 import {useNavigation} from '@react-navigation/native';
 import CardHome from '../../components/CardHome';
+import {profileAction} from '../../redux/slices/profile';
 // import Footer from '../../components/BottomTabs';
-
+import {useSelector, useDispatch} from 'react-redux';
+import {getProducts} from '../../utils/https/products';
+import debounce from 'lodash.debounce';
 const HomePage = () => {
   const [borderSearch, setBorderSearch] = useState(false);
+  const controllerProfile = useMemo(() => new AbortController(), []);
+  const controller = useMemo(() => new AbortController(), []);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState();
+  const profileUser = useSelector(state => state.profile.data);
+  // const {token, id} = useSelector(state => state.auth.data.data);
+  const {token} = useSelector(state => state.auth.data);
+  // console.log('inisial token');
+  // console.log(token);
+
+  const [limit, setLimit] = useState(8);
+  const [categories, setCategories] = useState('');
+  const [search, setSearch] = useState('');
+  const [dataProduct, setDataProduct] = useState([]);
+  const [metaData, setMetaData] = useState([]);
+  // console.log(authUser);
+  // const id = useSelector(state => state.auth.data.data.id);
   const datas = [
     {
       image: coffe1,
@@ -38,11 +59,64 @@ const HomePage = () => {
       price: 'IDR 27.000',
     },
   ];
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      dispatch(
+        profileAction.getProfileThunk({
+          controllerProfile,
+          token,
+        }),
+      );
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let query = `name=${search}&page=1&categories=${categories}&limit=${limit}`;
+    setLoading(true);
+    if (token) {
+      // console.log('token masuk');
+      fetchProfile();
+    }
+    getProducts(controller, query)
+      .then(({data}) => {
+        setDataProduct(data.data);
+        setMetaData(data.meta);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
+  }, [token]);
+  useEffect(() => {
+    navigation.navigate('ProductAll', {
+      search,
+      categories,
+    });
+  }, [categories, search]);
+  const debounceHandler = useCallback(
+    debounce(text => {
+      console.log(text);
+      setSearch(text);
+    }, 700),
+    [],
+  );
+  const searchHandler = text => {
+    // if (!text) return;
+    debounceHandler(text);
+  };
+  // console.log(profileUser);
+  // console.log(dataProduct);
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Navbar />
-      <View style={styles.mainContainer}>
+      <ScrollView style={styles.mainContainer}>
         {/* <DrawerNavigator /> */}
+        {loading && <ActivityIndicator size="large" color="#6A4029" />}
         <View style={styles.headerMain}>
           <Text style={styles.title}>A good coffee is a good day</Text>
           <View
@@ -60,6 +134,7 @@ const HomePage = () => {
               onBlur={() => {
                 setBorderSearch(false);
               }}
+              onChangeText={text => searchHandler(text)}
             />
           </View>
         </View>
@@ -69,28 +144,65 @@ const HomePage = () => {
           contentContainerStyle={styles.categoriesContainer}
           showsHorizontalScrollIndicator={false}
           overScrollMode="always">
-          <TouchableOpacity style={styles.categoriesTitle}>
-            <Text style={styles.categoriesText}>Favorite</Text>
+          <TouchableOpacity
+            style={styles.categoriesTitle}
+            onPress={() => setCategories('')}>
+            <Text
+              style={[
+                styles.categoriesText,
+                categories === '' && styles.textActive,
+              ]}>
+              Favorite
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoriesTitle}>
-            <Text style={styles.categoriesText}>Promo</Text>
+          <TouchableOpacity
+            style={styles.categoriesTitle}
+            onPress={() => setCategories(1)}>
+            <Text
+              style={[
+                styles.categoriesText,
+                categories === 1 && styles.textActive,
+              ]}>
+              Coffee
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoriesTitle}>
-            <Text style={styles.categoriesText}>Coffee</Text>
+          <TouchableOpacity
+            style={styles.categoriesTitle}
+            onPress={() => setCategories(2)}>
+            <Text
+              style={[
+                styles.categoriesText,
+                categories === 2 && styles.textActive,
+              ]}>
+              Non Coffee
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.categoriesTitle}>
-            <Text style={styles.categoriesText}>Non Coffee</Text>
+          <TouchableOpacity
+            style={styles.categoriesTitle}
+            onPress={() => setCategories(3)}>
+            <Text
+              style={[
+                styles.categoriesText,
+                categories === 3 && styles.textActive,
+              ]}>
+              Foods
+            </Text>
           </TouchableOpacity>
         </ScrollView>
         <View>
           <TouchableOpacity
             style={{width: '100%', alignItems: 'flex-end', paddingRight: 40}}
-            onPress={() => navigation.navigate('Favorite')}>
+            onPress={() =>
+              navigation.navigate('ProductAll', {
+                search,
+                categories,
+              })
+            }>
             <Text style={{color: '#6A4029', fontWeight: '900'}}>See more</Text>
           </TouchableOpacity>
         </View>
         <ScrollView style={styles.containerProductMain} horizontal={true}>
-          {datas.map((data, idx) => {
+          {/* {datas.map((data, idx) => {
             return (
               <CardHome
                 title={data.title}
@@ -99,13 +211,28 @@ const HomePage = () => {
                 key={idx}
               />
             );
-          })}
+          })} */}
+          {!dataProduct ? (
+            <Text>Loading bg</Text>
+          ) : (
+            dataProduct.map((data, idx) => {
+              return (
+                <CardHome
+                  title={data.product_name}
+                  image={data.image}
+                  price={data.price}
+                  key={idx}
+                  id={data.id}
+                />
+              );
+            })
+          )}
         </ScrollView>
         {/* <Footer /> */}
-      </View>
+      </ScrollView>
       {/* <Footer /> */}
       {/* <BottomTabs /> */}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -115,9 +242,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingLeft: 40,
+    minHeight: '200%',
+    paddingBottom: '45%',
   },
   mainContainer: {
     marginTop: 20,
+    flex: 1,
+    // paddingBottom: '25%',
+    // paddingBottom: '45%',
+  },
+  textActive: {
+    color: '#6A4029',
+    fontWeight: '900',
+    borderBottomWidth: 2,
   },
   title: {
     color: 'black',
@@ -173,7 +310,7 @@ const styles = StyleSheet.create({
   containerProductMain: {
     marginTop: 20,
     minWidth: '100%',
-    height: 350,
+    height: 400,
     flexDirection: 'row',
     overflow: 'scroll',
   },

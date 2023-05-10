@@ -39,11 +39,23 @@ const Favorite = () => {
       price: 27000,
       id: 3,
     },
+    {
+      image: coffe3,
+      title: 'Creamy Ice Latte',
+      price: 27000,
+      id: 3,
+    },
+    {
+      image: coffe3,
+      title: 'Creamy Ice Latte',
+      price: 27000,
+      id: 3,
+    },
   ];
   return (
-    <View style={{flex: 1, backgroundColor: '#F9F9F9'}}>
+    <ScrollView style={{flex: 1, backgroundColor: '#F9F9F9'}}>
       <ScrollView style={styles.scrolles}>
-        <View>
+        <View style={{flex: 1, paddingBottom: '15%'}}>
           <Text style={styles.category}>Everyone's Favorite</Text>
           <Text style={styles.category2}>Food</Text>
           <View style={styles.containerCard}>
@@ -63,7 +75,7 @@ const Favorite = () => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </ScrollView>
   );
 };
 

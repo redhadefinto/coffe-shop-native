@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 import React from 'react';
@@ -13,67 +14,164 @@ import WelcomePage from './src/screen/WelcomePage';
 import Favorite from './src/screen/Favorite';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import ProductDetail from './src/screen/ProductDetail';
+import CustomDrawer from './src/components/CustomDrawer';
+import CustomTabBar from './src/components/CustomTabBar';
+import CustomTabBarButton from './src/components/CustomTabBarButton';
+import {Image, StyleSheet} from 'react-native';
+import Profile from './src/screen/Profile';
+import Cart from './src/screen/Cart';
+import Chat from './src/screen/Chat';
+import ProductAll from './src/screen/ProductAll';
+import Delivery from './src/screen/Delivery';
 
-const DrawerNavigator = () => {
+const DrawerNavigator = props => {
   const {Navigator, Screen} = createDrawerNavigator();
   const navigation = useNavigation();
-  const navigateToFavorite = () => {
-    navigation.navigate('BottomTabs', {screen: 'Favorite'});
+  const navigateToCart = () => {
+    props.navigation.navigate('Home', {screen: 'Cart'});
   };
   const navigateToHome = () => {
-    navigation.navigate('BottomTabs', {screen: 'Home'});
+    props.navigation.navigate('Home', {screen: 'Home'});
   };
-
+  const navigateToChat = () => {
+    props.navigation.navigate('Home', {screen: 'Chat'});
+  };
+  const navigateToProfile = () => {
+    props.navigation.navigate('Home', {screen: 'Profile'});
+  };
   return (
-    <Navigator initialRouteName="Home">
+    <Navigator
+      initialRouteName="Home"
+      // eslint-disable-next-line react/jsx-no-undef
+      drawerContent={props => <CustomDrawer {...props} />}
+      screenOptions={{
+        headerShown: false,
+        drawerActiveBackgroundColor: '#6A4029',
+        drawerActiveTintColor: 'white',
+        drawerLabelStyle: {
+          marginLeft: 10,
+        },
+      }}>
       <Screen
         name="Home"
         component={BottomTabs}
-        // options={{
-        //   headerShown: false,
-        // }}
         listeners={() => ({
-          focus: navigateToHome, // Panggil navigateToFavorite saat layar Favorite fokus
+          focus: navigateToHome,
         })}
+        options={{
+          title: 'Home',
+          drawerIcon: ({focused, color, size}) => (
+            <Image
+              source={require('./src/assets/icon/home_active.png')}
+              style={{width: size, height: size, position: 'absolute'}}
+            />
+          ),
+        }}
       />
       <Screen
-        name="Favorite"
-        component={Favorite}
-        // options={{
-        //   headerShown: false,
-        // }}
+        name="Cart"
+        component={Cart}
         listeners={() => ({
-          focus: navigateToFavorite, // Panggil navigateToFavorite saat layar Favorite fokus
+          focus: navigateToCart,
         })}
+        options={{
+          title: 'Cart',
+          drawerIcon: ({focused, color, size}) => (
+            <Image
+              source={require('./src/assets/icon/cart_active.png')}
+              style={{width: size, height: size, position: 'absolute'}}
+            />
+          ),
+        }}
       />
-      {/* <Screen
-        name="ProductDetail"
-        component={ProductDetail}
-        // options={{
-        //   headerShown: false,
-        // }}
+      <Screen
+        name="Chat"
+        component={Chat}
         listeners={() => ({
-          focus: navigateToFavorite, // Panggil navigateToFavorite saat layar Favorite fokus
+          focus: navigateToChat,
         })}
-      /> */}
+        options={{
+          title: 'Chat',
+          drawerIcon: ({focused, color, size}) => (
+            <Image
+              source={require('./src/assets/icon/comment_active.png')}
+              style={{width: size, height: size, position: 'absolute'}}
+            />
+          ),
+        }}
+      />
+      <Screen
+        name="Profile"
+        component={Profile}
+        listeners={() => ({
+          focus: navigateToProfile,
+        })}
+        options={{
+          title: 'Profile',
+          drawerIcon: ({focused, color, size}) => (
+            <Image
+              source={require('./src/assets/icon/profile_active.png')}
+              style={{width: size, height: size, position: 'absolute'}}
+            />
+          ),
+        }}
+      />
     </Navigator>
   );
 };
 
-const BottomTabs = () => {
-  const {Navigator, Screen} = createMaterialBottomTabNavigator();
-  const navigation = useNavigation();
-  const navigateToFavorite = () => {
-    navigation.navigate('Home', {screen: 'Favorite'});
+const BottomTabs = props => {
+  const {Navigator, Screen} = createBottomTabNavigator();
+  const navigateToCart = () => {
+    props.navigation.navigate('Home', {screen: 'Cart'});
   };
   const navigateToHome = () => {
-    navigation.navigate('Home', {screen: 'Home'});
+    props.navigation.navigate('Home', {screen: 'Home'});
   };
-  const navigateToProductDetail = () => {
-    navigation.navigate('Home', {screen: 'ProductDetail'});
+  const navigateToChat = () => {
+    props.navigation.navigate('Home', {screen: 'Chat'});
+  };
+  const navigateToProfile = () => {
+    props.navigation.navigate('Home', {screen: 'Profile'});
   };
   return (
-    <Navigator>
+    <Navigator
+      tabBar={props => <CustomTabBar {...props} />}
+      screenOptions={({route}) => ({
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarInactiveTintColor: 'black',
+        tabBarStyle: styles.tabBarStyle,
+        tabBarActiveTintColor: '#6A4029',
+        tabBarIcon: ({color, size, focused}) => {
+          let iconSource;
+
+          if (route.name === 'Home') {
+            iconSource = focused
+              ? require('./src/assets/icon/home_active.png')
+              : require('./src/assets/icon/home_inactive.png');
+          } else if (route.name === 'Cart') {
+            iconSource = focused
+              ? require('./src/assets/icon/cart_active.png')
+              : require('./src/assets/icon/cart_inactive.png');
+          } else if (route.name === 'Chat') {
+            iconSource = focused
+              ? require('./src/assets/icon/comment_active.png')
+              : require('./src/assets/icon/comment_inactive.png');
+          } else if (route.name === 'Profile') {
+            iconSource = focused
+              ? require('./src/assets/icon/profile_active.png')
+              : require('./src/assets/icon/profile_inactive.png');
+          }
+
+          return (
+            <Image
+              source={iconSource}
+              style={{width: size, height: size, position: 'absolute'}}
+            />
+          );
+        },
+      })}>
       <Screen
         name="Home"
         component={HomePage}
@@ -83,20 +181,39 @@ const BottomTabs = () => {
         activeColor="#f0edf6"
         inactiveColor="#3e2465"
         barStyle={{backgroundColor: '#694fad'}}
+        options={{
+          tabBarButton: props => <CustomTabBarButton {...props} />,
+        }}
       />
       <Screen
-        name="Favorite"
-        component={Favorite}
+        name="Cart"
+        component={Cart}
         listeners={() => ({
-          focus: navigateToFavorite,
+          focus: navigateToCart,
         })}
+        options={{
+          tabBarButton: props => <CustomTabBarButton {...props} />,
+        }}
       />
       <Screen
-        name="ProductDetail"
-        component={ProductDetail}
+        name="Chat"
+        component={Chat}
         listeners={() => ({
-          focus: navigateToProductDetail,
+          focus: navigateToChat,
         })}
+        options={{
+          tabBarButton: props => <CustomTabBarButton {...props} />,
+        }}
+      />
+      <Screen
+        name="Profile"
+        component={Profile}
+        listeners={() => ({
+          focus: navigateToProfile,
+        })}
+        options={{
+          tabBarButton: props => <CustomTabBarButton {...props} />,
+        }}
       />
     </Navigator>
   );
@@ -105,7 +222,7 @@ const BottomTabs = () => {
 const StackNavigator = () => {
   const {Navigator, Screen} = createStackNavigator();
   return (
-    <Navigator>
+    <Navigator initialRouteName="DrawerNavigator">
       <Screen
         name="LandingPage"
         component={LandingPage}
@@ -141,8 +258,31 @@ const StackNavigator = () => {
           headerShown: false,
         }}
       />
-      <Screen name="Favorite" component={Favorite} />
-      <Screen name="ProductDetail" component={ProductDetail} />
+      <Screen
+        name="Favorite"
+        component={Favorite}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Screen
+        name="ProductAll"
+        component={ProductAll}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Screen
+        name="ProductDetail"
+        component={ProductDetail}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Screen name="Profile" component={Profile} />
+      <Screen name="Cart" component={Cart} />
+      <Screen name="Chat" component={Chat} />
+      <Screen name="Delivery" component={Delivery} />
     </Navigator>
   );
 };
@@ -156,3 +296,16 @@ const Router = () => {
 };
 
 export default Router;
+
+const styles = StyleSheet.create({
+  tabBarStyle: {
+    position: 'absolute',
+    backgroundColor: 'none',
+    borderTopWidth: 0,
+    // borderWidth: 2,
+    // bottom: 15,
+    // right: 10,
+    // left: 10,
+    height: 80,
+  },
+});

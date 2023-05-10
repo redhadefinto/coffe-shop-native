@@ -7,20 +7,78 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  ToastAndroid,
 } from 'react-native';
-
+import {useDispatch} from 'react-redux';
 import bgLogin from '../../assets/background/login-page.png';
 import iconGoogle from '../../assets/icon/icon-google.png';
 import {useNavigation} from '@react-navigation/native';
-
+import {authAction} from '../../redux/slices/auth';
+import {profileAction} from '../../redux/slices/profile';
+import Loaders from '../../components/Loaders';
 const Login = () => {
+  const controller = React.useMemo(() => new AbortController(), []);
+  const controllerProfile = React.useMemo(() => new AbortController(), []);
   const [buttonPressedRegist, setButtonPressedRegist] = useState(false);
   const [buttonPressedLoginWithGoogle, setButtonPressedLoginWithGoogle] =
     useState(false);
-  const inputAccessoryViewID = 'uniqueID';
+  const dispatch = useDispatch();
+  const [form, setForm] = React.useState({
+    email: '',
+    password: '',
+  });
+  const [IsLoading, setIsLoading] = useState(true);
+  const onChangeHandler = (text, type) => {
+    setForm(form => ({...form, [type]: text}));
+  };
+  const loginHandler = e => {
+    e.preventDefault();
+    if (form.email === '' || form.password === '') {
+      ToastAndroid.showWithGravity(
+        `Login successfully`,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+      );
+      return;
+    }
+    setIsLoading(true);
+    dispatch(
+      authAction.getAuthThunk(
+        {email: form.email, password: form.password},
+        controller,
+      ),
+    )
+      .then(result => {
+        // console.log(result);
+        if (result.payload.message === 'Request failed with status code 401') {
+          setIsLoading(false);
+          ToastAndroid.showWithGravity(
+            'Email / Password is Invalid !',
+            ToastAndroid.SHORT,
+            ToastAndroid.TOP,
+          );
+          setForm({...form, password: ''});
+          return;
+        }
+        // console.log(result.payload.token);
+        if (result.payload && result.payload.token) {
+          setIsLoading(false);
+          dispatch(
+            profileAction.getProfileThunk({
+              controllerProfile,
+              token: result.payload.token,
+            }),
+          );
+          navigation.navigate('DrawerNavigator');
+        }
+      })
+      .catch(err => console.log(err))
+      .finally(() => setIsLoading(false));
+  };
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
+      {/* {IsLoading && <Loaders />} */}
       <ImageBackground source={bgLogin} style={styles.image}>
         <View style={styles.overlay}>
           <View style={styles.topContainer}>
@@ -30,13 +88,17 @@ const Login = () => {
             <TextInput
               placeholder="Enter your email adress"
               style={styles.input}
-              inputAccessoryViewID={inputAccessoryViewID}
               placeholderTextColor={'white'}
+              value={form.email}
+              onChangeText={text => onChangeHandler(text, 'email')}
             />
             <TextInput
               placeholder={'Enter your password'}
               style={styles.input}
               placeholderTextColor={'white'}
+              secureTextEntry={true}
+              value={form.password}
+              onChangeText={text => onChangeHandler(text, 'password')}
             />
             <TouchableOpacity
               style={styles.forgotText}
@@ -51,9 +113,7 @@ const Login = () => {
               activeOpacity={0.9}
               onPressIn={() => setButtonPressedRegist(true)}
               onPressOut={() => setButtonPressedRegist(false)}
-              onPress={() => {
-                navigation.navigate('DrawerNavigator');
-              }}>
+              onPress={loginHandler}>
               <Text style={[styles.textButton, styles.colorBtnRegist]}>
                 Login
               </Text>

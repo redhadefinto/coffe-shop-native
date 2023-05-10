@@ -4,24 +4,35 @@ import {
   View,
   TouchableOpacity,
   ImageBackground,
+  Image,
 } from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
-const CardHome = ({title, price, image}) => {
+const CardHome = ({title, price, image, id}) => {
+  // console.log(image);
   const navigation = useNavigation();
+  const costing = price => {
+    return parseFloat(price)
+      .toFixed()
+      .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+  };
   return (
     <TouchableOpacity
       style={styles.containerProduct}
-      onPress={() => navigation.navigate('ProductDetail')}>
+      onPress={() =>
+        navigation.navigate('ProductDetail', {
+          prodId: id,
+        })
+      }>
       <View style={styles.containerImage}>
         <ImageBackground
-          source={image}
+          source={{uri: image}}
           style={styles.productImage}
           resizeMode="cover"
         />
       </View>
       <Text style={styles.productTitle}>{title}</Text>
-      <Text style={styles.productPrice}>{price}</Text>
+      <Text style={styles.productPrice}>Rp {costing(price)}</Text>
     </TouchableOpacity>
   );
 };
@@ -38,7 +49,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: '#FFFFFF',
     shadowColor: 'black',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: {width: 0, height: 3},
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
