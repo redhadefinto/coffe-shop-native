@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
+import LoadingBrown from '../LoadingBrown';
 const CardHome = ({title, price, image, id}) => {
   // console.log(image);
   const navigation = useNavigation();
@@ -25,11 +26,15 @@ const CardHome = ({title, price, image, id}) => {
         })
       }>
       <View style={styles.containerImage}>
-        <ImageBackground
-          source={{uri: image}}
-          style={styles.productImage}
-          resizeMode="cover"
-        />
+        {!image ? (
+          <LoadingBrown />
+        ) : (
+          <ImageBackground
+            source={{uri: image}}
+            style={styles.productImage}
+            resizeMode="cover"
+          />
+        )}
       </View>
       <Text style={styles.productTitle}>{title}</Text>
       <Text style={styles.productPrice}>Rp {costing(price)}</Text>

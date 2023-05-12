@@ -1,7 +1,12 @@
 {
   "name": "native1",
+  "displayName": "Coffeein",
   "version": "0.0.1",
   "private": true,
+  "android": {
+    "package": "com.myapp.android",
+    "icon": "./src/assets/icon/coffeein.png"
+  },
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",

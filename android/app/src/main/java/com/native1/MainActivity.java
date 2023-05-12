@@ -13,6 +13,11 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
+    // if (BuildConfig.DEBUG) {
+    // // Mengatur ikon khusus untuk perangkat pengembangan
+    // setTheme(R.style.AppTheme_Debug);
+    // }
+
     return "native1";
   }
   

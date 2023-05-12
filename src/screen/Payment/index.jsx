@@ -5,10 +5,12 @@ import {
   Pressable,
   Image,
   StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useMemo, useState} from 'react';
-import ButtonSecondary from '../../components/ButtonSecondary';
-import globalStyle from '../../styles/globalStyle';
+// import ButtonSecondary from '../../components/ButtonSecondary';
+import globalStyle from '../../styles/global';
 import {useDispatch, useSelector} from 'react-redux';
 import {useRoute} from '@react-navigation/native';
 import PaymentProdList from '../../components/PaymentProdList';
@@ -33,6 +35,7 @@ const Payment = () => {
   const [isToast, setToast] = useState(false);
   const [toastInfo, setToastInfo] = useState({});
   const [isSuccess, setSuccess] = useState(false);
+  const {token} = useSelector(state => state.auth.data);
   const [payment, setPayment] = useState(1);
   const handleSubmit = async () => {
     const dataShopping = cartRedux.shoppingCart.map(item => {
@@ -45,8 +48,8 @@ const Payment = () => {
         quantity: qty,
       };
     });
-    return console.log(dataShopping);
-    const body = {
+    // return console.log(dataShopping);
+    const datas = {
       promo_id: 1,
       payment_id: payment,
       delivery_id: cartRedux.delivery,
@@ -57,25 +60,24 @@ const Payment = () => {
     // console.log('BODY FETCHING', body);
     setLoading(true);
     try {
-      const result = await addTransactions(
-        reduxStore.user.token,
-        body,
-        controller,
-      );
+      const result = await createTransactions({datas, token, controller});
       console.log('ADD TRANSACTION', result);
-      if (result.status === 201) {
+      if (result.status === 200) {
         setLoading(false);
         // setToastInfo({msg: 'Transaction Success', display: 'success'});
-        setToast(true);
-        dispatch(cartAction.resetCart());
+        // setToast(true);
+        dispatch(cartActions.resetCart());
         setSuccess(true);
       }
     } catch (error) {
       console.log(error);
       setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
-
+  // console.log(cartRedux.shoppingCart);
+  console.log(reduxStore.user);
   const taxFee = cartRedux.delivery == 1 ? 10000 : 0;
   const grandTotal = route.params.subtotal + taxFee;
   return (
@@ -106,7 +108,7 @@ const Payment = () => {
         <View style={globalStyle.lineStyle}></View>
         <View style={{width: '100%', paddingVertical: 20, gap: 16}}>
           {cartRedux.shoppingCart.map(item => (
-            <PaymentProdList key={item.product_id} data={item} />
+            <PaymentProdList key={item.id} data={item} />
           ))}
         </View>
         <View style={[globalStyle.lineStyle, styles.mb4]}></View>
@@ -129,21 +131,19 @@ const Payment = () => {
           </Text>
         </View>
         {isLoading ? (
-          <BtnLoadingSec />
+          <ActivityIndicator size="large" color="#6A4029" />
         ) : isSuccess ? (
-          <ButtonPrimary
-            title="Go Home"
-            handlePress={() => navigation.navigate('Home')}
-          />
-        ) : (
-          <TouchableOpacity onPress={handleSubmit} activeOpacity={0.8}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('DrawerNavigator')}
+            activeOpacity={0.8}>
             <View
               style={{
                 marginVertical: 15,
-                backgroundColor: '#FFBA33',
+                backgroundColor: '#6A4029',
                 height: 70,
                 borderRadius: 20,
-                paddingLeft: 30,
+                // paddingLeft: 30,
+                paddingHorizontal: 50,
                 alignItems: 'center',
                 display: 'flex',
                 flexDirection: 'row',
@@ -151,10 +151,38 @@ const Payment = () => {
               }}>
               <Text
                 style={{
-                  paddingLeft: 55,
-                  color: 'black',
+                  // paddingLeft: 55,
+                  color: '#F6F6F9',
                   fontFamily: 'Poppins-Bold',
                   fontSize: 16,
+                  fontWeight: '800',
+                }}>
+                Go Home
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={handleSubmit} activeOpacity={0.8}>
+            <View
+              style={{
+                marginVertical: 15,
+                backgroundColor: '#6A4029',
+                height: 70,
+                borderRadius: 20,
+                // paddingLeft: 30,
+                paddingHorizontal: 50,
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'row',
+                alignContent: 'center',
+              }}>
+              <Text
+                style={{
+                  // paddingLeft: 55,
+                  color: '#F6F6F9',
+                  fontFamily: 'Poppins-Bold',
+                  fontSize: 16,
+                  fontWeight: '800',
                 }}>
                 CHECKOUT
               </Text>

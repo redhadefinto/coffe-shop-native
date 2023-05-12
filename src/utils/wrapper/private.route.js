@@ -3,9 +3,10 @@
 // import Loaders from '@/components/Loaders';
 import {useNavigation} from '@react-navigation/native';
 import {useRouter} from 'next/router';
-import {useEffect} from 'react';
-import {Text} from 'react-native';
+import {useEffect, useState} from 'react';
+import {Text, ActivityIndicator} from 'react-native';
 import {useSelector} from 'react-redux';
+import LoadingBrown from '../../components/LoadingBrown';
 
 const privateRoute = WrappedComponent => {
   const Auth = props => {
@@ -14,7 +15,6 @@ const privateRoute = WrappedComponent => {
     const navigate = useNavigation();
     useEffect(() => {
       if (!dataArray) {
-        // router.push('/login');
         navigate.navigate('Login');
       }
     }, [dataArray, navigate]);
@@ -22,7 +22,7 @@ const privateRoute = WrappedComponent => {
     if (dataArray) {
       return <WrappedComponent {...props} />;
     }
-    return <Text>Loading bg</Text>;
+    return <ActivityIndicator size="large" color="#6A4029" />;
   };
 
   return Auth;

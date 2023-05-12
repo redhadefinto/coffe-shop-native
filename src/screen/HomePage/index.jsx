@@ -22,6 +22,8 @@ import {profileAction} from '../../redux/slices/profile';
 import {useSelector, useDispatch} from 'react-redux';
 import {getProducts} from '../../utils/https/products';
 import debounce from 'lodash.debounce';
+import LoadingBrown from '../../components/LoadingBrown';
+import privateRoute from '../../utils/wrapper/private.route';
 const HomePage = () => {
   const [borderSearch, setBorderSearch] = useState(false);
   const controllerProfile = useMemo(() => new AbortController(), []);
@@ -79,7 +81,6 @@ const HomePage = () => {
     let query = `name=${search}&page=1&categories=${categories}&limit=${limit}`;
     setLoading(true);
     if (token) {
-      // console.log('token masuk');
       fetchProfile();
     }
     getProducts(controller, query)
@@ -115,7 +116,6 @@ const HomePage = () => {
     <ScrollView style={styles.container}>
       <Navbar />
       <ScrollView style={styles.mainContainer}>
-        {/* <DrawerNavigator /> */}
         {loading && <ActivityIndicator size="large" color="#6A4029" />}
         <View style={styles.headerMain}>
           <Text style={styles.title}>A good coffee is a good day</Text>
@@ -202,18 +202,8 @@ const HomePage = () => {
           </TouchableOpacity>
         </View>
         <ScrollView style={styles.containerProductMain} horizontal={true}>
-          {/* {datas.map((data, idx) => {
-            return (
-              <CardHome
-                title={data.title}
-                image={data.image}
-                price={data.price}
-                key={idx}
-              />
-            );
-          })} */}
-          {!dataProduct ? (
-            <Text>Loading bg</Text>
+          {!dataProduct || loading ? (
+            <LoadingBrown />
           ) : (
             dataProduct.map((data, idx) => {
               return (
@@ -236,7 +226,7 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default privateRoute(HomePage);
 
 const styles = StyleSheet.create({
   container: {

@@ -2,10 +2,10 @@
 // import { compose } from "@reduxjs/toolkit";
 import axios from 'axios';
 // eslint-disable-next-line no-undef
-const baseUrl = `${process.env.REACT_APP_SERVER_HOST}`;
+import {SERVER_HOST} from '@env';
 
 export const createTransactions = ({datas, token, controller}) => {
-  const url = `${baseUrl}/transactions`;
+  const url = `${SERVER_HOST}/transactions`;
   return axios.post(url, datas, {
     signal: controller.signal,
     headers: {
@@ -16,7 +16,7 @@ export const createTransactions = ({datas, token, controller}) => {
 
 export const getHistory = (token, controller) => {
   // console.log(token)
-  const url = `${baseUrl}/transactions`;
+  const url = `${SERVER_HOST}/transactions`;
   return axios.get(url, {
     signal: controller.signal,
     headers: {Authorization: `Bearer ${token}`},
@@ -25,7 +25,7 @@ export const getHistory = (token, controller) => {
 
 export const getHistoryDetails = (token, tpsId, controller) => {
   // console.log(token)
-  const url = `${baseUrl}/transactions/detail`;
+  const url = `${SERVER_HOST}/transactions/detail`;
   return axios.get(url, tpsId, {
     signal: controller.signal,
     headers: {
@@ -34,7 +34,7 @@ export const getHistoryDetails = (token, tpsId, controller) => {
   });
 };
 export const deleteHistory = (token, tpsId, controller) => {
-  const url = `${baseUrl}/transactions`;
+  const url = `${SERVER_HOST}/transactions`;
   const config = {
     headers: {Authorization: `Bearer ${token}`},
     data: {

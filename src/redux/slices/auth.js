@@ -55,7 +55,6 @@ const authSlice = createSlice({
         };
       })
       .addCase(getAuthThunk.fulfilled, (prevState, action) => {
-        // console.log(action)
         return {
           ...prevState,
           isLoading: false,

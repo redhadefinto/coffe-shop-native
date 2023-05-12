@@ -12,10 +12,11 @@ import HomePage from './src/screen/HomePage';
 import LandingPage from './src/screen/LandingPage';
 import WelcomePage from './src/screen/WelcomePage';
 import Favorite from './src/screen/Favorite';
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+// import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import ProductDetail from './src/screen/ProductDetail';
 import CustomDrawer from './src/components/CustomDrawer';
-import CustomTabBar from './src/components/CustomTabBar';
+// import CustomTabBar from './src/components/CustomTabBar';
+// CustomTabBar
 import CustomTabBarButton from './src/components/CustomTabBarButton';
 import {Image, StyleSheet} from 'react-native';
 import Profile from './src/screen/Profile';
@@ -24,6 +25,8 @@ import Chat from './src/screen/Chat';
 import ProductAll from './src/screen/ProductAll';
 import Delivery from './src/screen/Delivery';
 import Payment from './src/screen/Payment';
+import CustomTabBar from './src/components/CustomTabBar/index';
+import SplashScreen from './src/screen/SplashScreen';
 
 const DrawerNavigator = props => {
   const {Navigator, Screen} = createDrawerNavigator();
@@ -223,7 +226,14 @@ const BottomTabs = props => {
 const StackNavigator = () => {
   const {Navigator, Screen} = createStackNavigator();
   return (
-    <Navigator initialRouteName="DrawerNavigator">
+    <Navigator initialRouteName="SplashScreen">
+      <Screen
+        name="SplashScreen"
+        component={SplashScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Screen
         name="LandingPage"
         component={LandingPage}

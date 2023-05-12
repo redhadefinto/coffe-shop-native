@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+// profileSlice.js
 
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import {getProfile} from '../../utils/https/profile';
 
 const initialState = {
@@ -11,20 +12,20 @@ const initialState = {
   err: null,
 };
 
-const getProfileThunk = createAsyncThunk(
+// Membuat async thunk untuk memanggil API getProfile
+export const getProfileThunk = createAsyncThunk(
   'profile/get',
   async ({controllerProfile, token}) => {
     try {
-      // console.log(token)
-      // console.log(controllerProfile);
       const response = await getProfile(controllerProfile, token);
       return response.data;
     } catch (err) {
-      return err;
+      throw err;
     }
   },
 );
 
+// Membuat slice reducer dan menambahkan ekstra reducers
 const profileSlice = createSlice({
   name: 'profile',
   initialState,
@@ -48,7 +49,6 @@ const profileSlice = createSlice({
         };
       })
       .addCase(getProfileThunk.fulfilled, (prevState, action) => {
-        // console.log(action)
         return {
           ...prevState,
           isLoading: false,
@@ -61,7 +61,7 @@ const profileSlice = createSlice({
           ...prevState,
           isLoading: false,
           isRejected: true,
-          err: action.payload,
+          err: action.error.message, // Menggunakan pesan kesalahan yang dapat diserialisasi
         };
       });
   },
@@ -71,4 +71,5 @@ export const profileAction = {
   ...profileSlice.actions,
   getProfileThunk,
 };
+
 export default profileSlice.reducer;
