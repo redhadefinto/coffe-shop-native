@@ -14,42 +14,40 @@ export const getProfile = (controllerProfile, token) => {
   });
 };
 
-export const uploadImage = (img, token, controller) => {
+export const uploadImage = ({img}, token, controller) => {
+  console.log('dari http reques');
+  console.log(img);
   const fromData = new FormData();
-  fromData.append('image', img);
+  fromData.append('image', {
+    uri: img.uri,
+    name: img.fileName,
+    type: img.type,
+  });
+  console.log('ini form data');
+  console.log(fromData);
   const url = `${SERVER_HOST}/cloud/user`;
   return axios.post(url, fromData, {
     signal: controller.signal,
     headers: {
       Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
     },
   });
 };
 
-export const patchProfile = ({form, token, controller}, genderUpdate) => {
-  // console.log(form)
-  // console.log(filevalue)
-  // console.log(genderUpdate)
-  const url = `${SERVER_HOST}/profile`;
-  let body = {...form};
-  if (genderUpdate) {
-    const gender = genderUpdate.gender;
-    body = {
-      ...form,
-      gender,
-    };
+export const patchProfile = (body, token, controller) => {
+  for (let key in body) {
+    if (typeof body[key] === 'string' && body[key] === '') {
+      delete body[key]; // Menghapus properti jika nilainya adalah string kosong
+    }
   }
-  console.log(body);
-  // console.log(form)
-  // const formData = new FormData();
-  // if(filevalue) {
-  //   formData.append("image", filevalue);
+
+  // if (body.birthday) {
+  //   const datetime = body.birthday.split('T')[0]; // Memisahkan tanggal dan waktu
+  //   body.birthday = datetime; // Menggunakan hanya bagian tanggal
   // }
-  // // console.log(formData)
-  // for (const [key, value] of Object.entries(form)) {
-  //   formData.append(key, value);
-  // }
-  // console.log(formData)
+
+  const url = `${SERVER_HOST}/profile`;
   return axios.patch(url, body, {
     signal: controller.signal,
     headers: {

@@ -15,7 +15,10 @@ const CardCart = ({image, price, name, id, sizes, qty}) => {
     if (info === 'inc') {
       dispatch(cartActions.increment(id));
     } else {
-      if (qty === 1) return;
+      if (qty === 1) {
+        return dispatch(cartActions.deleteItem({id, sizes}));
+      }
+      if (qty === 0) return;
       dispatch(cartActions.decrement(id));
     }
   };
@@ -36,9 +39,17 @@ const CardCart = ({image, price, name, id, sizes, qty}) => {
           width: width / 3,
           padding: 10,
           borderRadius: 30,
+          shadowColor: 'black',
+          shadowOffset: {width: 0, height: 3},
+          shadowOpacity: 0.5,
+          shadowRadius: 4,
+          elevation: 5,
         }}>
         <Image source={{uri: image}} style={styles.cardImage} />
         <Text style={styles.cardPrice}>IDR {costing(price)}</Text>
+        <Text style={styles.sizes}>
+          {sizes === 1 ? 'Regular' : sizes === 2 ? 'Large' : 'Extra Large'}
+        </Text>
       </View>
       <View>
         <Text style={styles.cardTitle}>{name}</Text>

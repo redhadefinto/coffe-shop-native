@@ -67,8 +67,7 @@ const cartSlice = createSlice({
 
       const exsistIdx = prevState.shoppingCart.findIndex(
         item =>
-          item.id === action.payload.id &&
-          item.selectedSize === action.payload.selectedSize,
+          item.id === action.payload.id && item.sizes === action.payload.sizes,
       );
 
       if (exsistIdx !== -1) {
@@ -104,6 +103,16 @@ const cartSlice = createSlice({
       //   shoppingCart: prevState.shoppingCart.concat(action.payload),
       // };
     },
+    deleteItem: (prevState, action) => {
+      const {id, sizes} = action.payload;
+
+      const updatedCart = prevState.shoppingCart.filter(
+        item => item.id !== id || item.sizes !== sizes,
+      );
+
+      return {...prevState, shoppingCart: updatedCart};
+    },
+
     resetCart: () => {
       return initialState;
     },

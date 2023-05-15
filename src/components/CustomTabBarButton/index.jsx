@@ -47,13 +47,7 @@ const CustomTabBarButton = props => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={onPress}
-        style={[
-          styles.inactiveBtn,
-          // {
-          //   borderTopLeftRadius: route === 'home' ? 10 : 0,
-          //   borderTopRightRadius: route === 'favorite' ? 10 : 0,
-          // },
-        ]}>
+        style={[styles.inactiveBtn]}>
         <View>{children}</View>
       </TouchableOpacity>
     );

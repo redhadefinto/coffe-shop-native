@@ -27,7 +27,10 @@ const CustomDrawer = props => {
         <>
           <ImageBackground style={styles.containerImage}>
             <Image
-              source={{uri: profileUser.data[0].image}}
+              source={
+                {uri: profileUser.data[0].image} ||
+                require('../../assets/images/default-image.png')
+              }
               style={styles.userImg}
             />
             <Text style={styles.textName}>

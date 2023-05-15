@@ -9,7 +9,9 @@ import {
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import LoadingBrown from '../LoadingBrown';
-const CardHome = ({title, price, image, id}) => {
+import iconPensil from '../../assets/icon/pensil.png';
+
+const CardHome = ({title, price, image, id, role_id}) => {
   // console.log(image);
   const navigation = useNavigation();
   const costing = price => {
@@ -36,6 +38,15 @@ const CardHome = ({title, price, image, id}) => {
           />
         )}
       </View>
+      {role_id === 1 && (
+        <TouchableOpacity style={styles.containerIconPencil}>
+          <ImageBackground
+            source={iconPensil}
+            style={{width: 25, height: 25}}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
+      )}
       <Text style={styles.productTitle}>{title}</Text>
       <Text style={styles.productPrice}>Rp {costing(price)}</Text>
     </TouchableOpacity>
@@ -96,5 +107,15 @@ const styles = StyleSheet.create({
     position: 'relative',
     top: '-10%',
     overflow: 'hidden',
+  },
+  containerIconPencil: {
+    width: 50,
+    height: 50,
+    backgroundColor: '#6A4029',
+    position: 'absolute',
+    borderRadius: 10000,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

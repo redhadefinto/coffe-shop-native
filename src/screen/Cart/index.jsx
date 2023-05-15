@@ -96,13 +96,13 @@ const Cart = () => {
   if (cartState.length !== 0) {
     cartState.forEach(item => {
       subtotal += item.price * item.qty;
-      if (item.sizes === '1') {
+      if (item.sizes === 1) {
         sizeCost += 3000;
       }
-      if (item.sizes === '2') {
+      if (item.sizes === 2) {
         sizeCost += 5000;
       }
-      if (item.sizes === '3') {
+      if (item.sizes === 3) {
         sizeCost += 8000;
       }
     });
@@ -111,7 +111,7 @@ const Cart = () => {
   }
 
   // console.log(total);a
-  // console.log(cartState);
+  console.log(cartState);
   // console.log(subTotal);
   return (
     <ScrollView style={styles.container}>
@@ -136,13 +136,14 @@ const Cart = () => {
         ) : (
           cartState.map((data, idx) => {
             return (
-              <View style={{minHeight: 250}} key={idx}>
+              <View style={{minHeight: 210}} key={idx}>
                 <CardCart
                   name={data.name}
                   price={data.price}
                   image={data.image}
                   id={data.id}
                   qty={data.qty}
+                  sizes={data.sizes}
                 />
                 {/* {subTotal.push(data.price)} */}
               </View>

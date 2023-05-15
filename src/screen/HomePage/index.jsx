@@ -28,6 +28,7 @@ const HomePage = () => {
   const [borderSearch, setBorderSearch] = useState(false);
   const controllerProfile = useMemo(() => new AbortController(), []);
   const controller = useMemo(() => new AbortController(), []);
+  // const profileUser = useSelector(state => state.profile.data);
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState();
@@ -62,16 +63,33 @@ const HomePage = () => {
     },
   ];
   const fetchProfile = async () => {
+    // console.log('start');
     try {
-      setLoading(true);
-      dispatch(
+      const result = await dispatch(
         profileAction.getProfileThunk({
           controllerProfile,
           token,
         }),
       );
+      // console.log(result);
+      if (result.error?.message === 'Request failed with status code 403') {
+        return setTimeout(() => {
+          navigation.dispatch(StackActions.replace('LandingPage'));
+        }, 5000);
+      }
+      if (result.error?.message === 'Request failed with status code 401') {
+        return setTimeout(() => {
+          navigation.dispatch(StackActions.replace('LandingPage'));
+        }, 5000);
+      }
+      if (result.payload?.data) {
+        setLoading(false);
+      }
     } catch (error) {
       console.log(error);
+      setTimeout(() => {
+        navigation.dispatch(StackActions.replace('LandingPage'));
+      }, 5000);
     } finally {
       setLoading(false);
     }
@@ -80,9 +98,12 @@ const HomePage = () => {
   useEffect(() => {
     let query = `name=${search}&page=1&categories=${categories}&limit=${limit}`;
     setLoading(true);
-    if (token) {
-      fetchProfile();
+    if (!token) {
+      setTimeout(() => {
+        navigation.dispatch(StackActions.replace('LandingPage'));
+      }, 5000);
     }
+    fetchProfile();
     getProducts(controller, query)
       .then(({data}) => {
         setDataProduct(data.data);
@@ -94,10 +115,10 @@ const HomePage = () => {
       .finally(() => setLoading(false));
   }, [token]);
   useEffect(() => {
-    navigation.navigate('ProductAll', {
-      search,
-      categories,
-    });
+    // navigation.navigate('ProductAll', {
+    //   search,
+    //   categories,
+    // });
   }, [categories, search]);
   const debounceHandler = useCallback(
     debounce(text => {
@@ -110,13 +131,12 @@ const HomePage = () => {
     // if (!text) return;
     debounceHandler(text);
   };
-  // console.log(profileUser);
+  console.log(profileUser);
   // console.log(dataProduct);
   return (
     <ScrollView style={styles.container}>
       <Navbar />
       <ScrollView style={styles.mainContainer}>
-        {loading && <ActivityIndicator size="large" color="#6A4029" />}
         <View style={styles.headerMain}>
           <Text style={styles.title}>A good coffee is a good day</Text>
           <View
@@ -136,6 +156,11 @@ const HomePage = () => {
               }}
               onChangeText={text => searchHandler(text)}
             />
+            {profileUser.data[0].role_id === 1 && (
+              <TouchableOpacity style={styles.containerIconPencil}>
+                <Text style={styles.iconPlus}>+</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
         <ScrollView
@@ -203,7 +228,15 @@ const HomePage = () => {
         </View>
         <ScrollView style={styles.containerProductMain} horizontal={true}>
           {!dataProduct || loading ? (
-            <LoadingBrown />
+            <View
+              style={{
+                width: '100%',
+                height: '80%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size="large" color="#6A4029" />
+            </View>
           ) : (
             dataProduct.map((data, idx) => {
               return (
@@ -213,15 +246,13 @@ const HomePage = () => {
                   price={data.price}
                   key={idx}
                   id={data.id}
+                  role_id={profileUser.data[0].role_id}
                 />
               );
             })
           )}
         </ScrollView>
-        {/* <Footer /> */}
       </ScrollView>
-      {/* <Footer /> */}
-      {/* <BottomTabs /> */}
     </ScrollView>
   );
 };
@@ -252,8 +283,8 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
   containerSearch: {
-    width: '100%',
-    backgroundColor: '#EFEEEE',
+    width: '80%',
+    backgroundColor: '#fafafa',
     marginTop: 20,
     borderRadius: 50,
     position: 'relative',
@@ -355,5 +386,28 @@ const styles = StyleSheet.create({
     position: 'relative',
     top: '-10%',
     overflow: 'hidden',
+  },
+  containerIconPencil: {
+    width: 50,
+    height: 50,
+    backgroundColor: '#6A4029',
+    borderRadius: 10000,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 30,
+  },
+  containerAddProduct: {
+    Height: 400,
+    borderWidth: 2,
+    position: 'relative',
+    width: '100%',
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  iconPlus: {
+    color: 'white',
+    fontSize: 30,
+    fontWeight: '900',
   },
 });

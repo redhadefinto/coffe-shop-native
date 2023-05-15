@@ -43,6 +43,7 @@ const ProductAll = () => {
   const [borderSearch, setBorderSearch] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState();
+  const [noData, setNoData] = useState(false);
 
   const handlePage = async () => {
     // if (totalPage === page) return;
@@ -54,23 +55,27 @@ const ProductAll = () => {
     try {
       setLoading(true);
       // console.log(search);
-      let querys = `name=${search}&page=${page}&categories=${categories}&limit=${limit}`;
+      let querys = `name=${
+        search || ''
+      }&page=${page}&categories=${categories}&limit=${limit}`;
       const result = await getProducts(controller, querys);
-      console.log(result.data.data);
+      // console.log(result.data.data);
       // const merged = [...dataProduct, ...result.data.data];
+      // console.log(result.payload);
       setDataProduct(result.data.data);
+      setNoData(false);
       // setPage(result.data.meta.next.page);
       // setMetaData(result.data.meta);
-      if (result.data.meta.next.page === null) {
-        return;
-      }
+      // if (result.data.meta.next.page === null) {
+      //   return;
+      // }
       setPage(result.data.meta.next.page);
       // setTotalPage(result.data.meta.totalPage);
       // console.log(result.data.meta);
     } catch (error) {
       console.log(error);
       if (error.response && error.response.status === 404) {
-        // setNoData(true);
+        setNoData(true);
         setLoading(false);
       }
     } finally {
@@ -81,7 +86,7 @@ const ProductAll = () => {
     debounce(text => {
       console.log(text);
       setSearch(text);
-    }, 700),
+    }, 500),
     [],
   );
   const searchHandler = text => {
@@ -92,7 +97,7 @@ const ProductAll = () => {
   useEffect(() => {
     handlePage();
   }, [search, categories]);
-  // console.log(dataProduct);
+  console.log(dataProduct);
   // console.log(metaData);
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#F9F9F9'}}>
@@ -195,7 +200,12 @@ const ProductAll = () => {
                 }}>
                 <ActivityIndicator size="large" color="#6A4029" />
               </View>
+            ) : noData ? (
+              <View>
+                <Text>Data Not Found</Text>
+              </View>
             ) : (
+              dataProduct.length > 0 &&
               dataProduct.map((data, idx) => {
                 return (
                   <View key={data.id}>

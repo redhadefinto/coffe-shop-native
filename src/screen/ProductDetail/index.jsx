@@ -54,7 +54,7 @@ const ProductDetail = () => {
       id: datas[0].id,
       image: datas[0].image,
       name: datas[0].product_name,
-      sizes,
+      sizes: parseInt(sizes),
       qty,
       price: datas[0].price,
     };

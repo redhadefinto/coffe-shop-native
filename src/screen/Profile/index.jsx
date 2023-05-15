@@ -43,8 +43,8 @@ function Profile() {
         setLoading(false);
       });
   }, []);
-  // console.log(profile.data);
-  console.log(datasTransaction);
+  console.log(profile);
+  // console.log(datasTransaction);
   return (
     <ScrollView style={styles.container}>
       {profile.data.length === 0 ? (
@@ -56,7 +56,7 @@ function Profile() {
             alignItems: 'center',
             // borderWidth: 2,
           }}>
-          <LoadingBrown />
+          <ActivityIndicator size="large" color="#6A4029" />
         </View>
       ) : (
         profile.data.map((data, idx) => {
@@ -130,15 +130,16 @@ function Profile() {
               </View>
               <Divider width={8} style={{width: '100%', marginTop: 15}} />
               <View style={styles.containerNavigation}>
-                <Pressable style={styles.button}>
+                <Pressable
+                  style={styles.button}
+                  onPress={() => {
+                    navigation.navigate('EditProfile');
+                  }}>
                   <Text style={styles.textButton}>Edit Profile</Text>
                   <IconComunity
                     name={'chevron-right'}
                     size={20}
                     style={styles.arrowButton}
-                    onPress={() => {
-                      navigation.navigate('EditProfile');
-                    }}
                   />
                 </Pressable>
               </View>
@@ -179,7 +180,6 @@ function Profile() {
                   paddingTop: 15,
                   paddingBottom: 100,
                 }}>
-                {/* <ButtonCustom text={"Save"} textColor={"white"} color={"#6A4029"} /> */}
                 <Pressable style={styles.buttonSave}>
                   <Text style={styles.textButtonSave}>Save</Text>
                 </Pressable>

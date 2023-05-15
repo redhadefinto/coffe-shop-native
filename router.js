@@ -27,6 +27,7 @@ import Delivery from './src/screen/Delivery';
 import Payment from './src/screen/Payment';
 import CustomTabBar from './src/components/CustomTabBar/index';
 import SplashScreen from './src/screen/SplashScreen';
+import EditProfile from './src/screen/Profile/EditProfile';
 
 const DrawerNavigator = props => {
   const {Navigator, Screen} = createDrawerNavigator();
@@ -295,6 +296,7 @@ const StackNavigator = () => {
       <Screen name="Chat" component={Chat} />
       <Screen name="Delivery" component={Delivery} />
       <Screen name="Payment" component={Payment} />
+      <Screen name="EditProfile" component={EditProfile} />
     </Navigator>
   );
 };

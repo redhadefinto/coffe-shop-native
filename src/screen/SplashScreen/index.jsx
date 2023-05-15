@@ -12,13 +12,12 @@ function SplashScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {token} = useSelector(state => state.auth.data);
-  // const profileRedux = useSelector(state => state.profile.err);
   const controllerProfile = useMemo(() => new AbortController(), []);
   const [loadingText, setLoadingText] = useState('');
-  // console.log(token)
-  // console.log(profileRedux);
+  const [pageDisplayed, setPageDisplayed] = useState(false);
+
   const fetchProfile = async () => {
-    console.log('start');
+    // console.log('start');
     try {
       const result = await dispatch(
         profileAction.getProfileThunk({
@@ -26,15 +25,17 @@ function SplashScreen() {
           token,
         }),
       );
-      console.log(result);
+      // console.log(result);
       if (result.error?.message === 'Request failed with status code 403') {
-        setTimeout(() => {
+        return setTimeout(() => {
           navigation.dispatch(StackActions.replace('LandingPage'));
         }, 5000);
       }
-      // if (result.payload.message === 'Request failed with status code 403') {
-      //   console.log('masuk');
-      // }
+      if (result.error?.message === 'Request failed with status code 401') {
+        return setTimeout(() => {
+          navigation.dispatch(StackActions.replace('LandingPage'));
+        }, 5000);
+      }
       if (result.payload?.data) {
         setTimeout(() => {
           navigation.dispatch(StackActions.replace('DrawerNavigator'));
@@ -49,7 +50,7 @@ function SplashScreen() {
   };
 
   useEffect(() => {
-    const text = 'Coffein';
+    const text = 'Coffeein';
     let currentIndex = 0;
 
     const interval = setInterval(() => {
@@ -64,17 +65,21 @@ function SplashScreen() {
       });
     }, 500);
 
-    if (!token) {
-      setTimeout(() => {
-        navigation.dispatch(StackActions.replace('LandingPage'));
-      }, 5000);
+    if (!pageDisplayed) {
+      setPageDisplayed(true);
+    } else {
+      if (!token) {
+        setTimeout(() => {
+          navigation.dispatch(StackActions.replace('LandingPage'));
+        }, 5000);
+      }
+      fetchProfile();
     }
-    fetchProfile();
 
     return () => {
       clearInterval(interval);
     };
-  }, [navigation, token]);
+  }, [navigation, token, pageDisplayed]);
 
   return (
     <View style={styles.container}>

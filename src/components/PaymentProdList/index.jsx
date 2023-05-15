@@ -4,15 +4,11 @@ import globalStyle from '../../styles/global';
 
 const PaymentProdList = ({data}) => {
   const sizeName =
-    data.sizes === '1'
-      ? 'Regular'
-      : data.sizes === '2'
-      ? 'Large'
-      : 'Extra Large';
+    data.sizes === 1 ? 'Regular' : data.sizes === 2 ? 'Large' : 'Extra Large';
   return (
     <View style={styles.cardContainer}>
       <View>
-        <Text style={globalStyle.textBold}>{data.prodName}</Text>
+        <Text style={globalStyle.textBold}>{data.name}</Text>
         <Text style={globalStyle.textReg}>
           {data.qty}&#215; {sizeName}
         </Text>

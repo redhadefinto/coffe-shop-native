@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {BottomTabBar} from '@react-navigation/bottom-tabs';
 // import {COLORS} from '../constants';
@@ -31,5 +31,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 2,
     elevation: 3,
+  },
+  containerIconPencil: {
+    width: 50,
+    height: 50,
+    backgroundColor: '#6A4029',
+    position: 'absolute',
+    borderRadius: 10000,
+    // right: 0,
+    top: -130,
+    right: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

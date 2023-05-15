@@ -10,6 +10,7 @@ const globalStyle = StyleSheet.create({
   textBold: {
     fontFamily: 'Poppins-Bold',
     color: 'black',
+    fontWeight: '900',
   },
   textReg: {
     fontFamily: 'Poppins-Regular',
@@ -31,6 +32,10 @@ const globalStyle = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'black',
     color: 'black',
+    fontWeight: '900',
+  },
+  email: {
+    backgroundColor: '#BABABA4A',
   },
 });
 
