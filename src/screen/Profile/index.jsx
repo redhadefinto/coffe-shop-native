@@ -6,30 +6,74 @@ import IconComunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Divider} from '@rneui/themed';
 // import Sample from '../image/Hazel.png';
 // import ButtonCustom from '../components/FancyButton';
-
+import FlashMessage from 'react-native-flash-message';
+import {showMessage, hideMessage} from 'react-native-flash-message';
+import {StackActions} from '@react-navigation/native';
 import {
   View,
   Image,
   ScrollView,
   Text,
   Pressable,
+  TouchableOpacity,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import coffe1 from '../../assets/Products/coffe-1.png';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {getHistory} from '../../utils/https/transaction';
 import LoadingBrown from '../../components/LoadingBrown';
-// import historyAction from '../../redux/actions/transaction';
+import {logOut} from '../../utils/https/auth';
+import {cartActions} from '../../redux/slices/cart';
+import {authAction} from '../../redux/slices/auth';
+import manage from '../../assets/icon/manage.png';
 // import transactionActions from '../../redux/actions/transaction';
 // import userAction from '../../redux/actions/user';
 function Profile() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const [modalVisible, setModalVisible] = useState(false);
   const profile = useSelector(state => state.profile.data);
   const [loading, setLoading] = useState();
+  const [loadingProfile, setLoadingProfile] = useState(false);
   const [datasTransaction, setDatasTransaction] = useState([]);
   const {token} = useSelector(state => state.auth.data);
   const controller = useMemo(() => new AbortController(), []);
+  const fecthProfile = async () => {
+    try {
+      setLoadingProfile(true);
+      const getProfileUpdate = await dispatch(
+        profileAction.getProfileThunk({
+          controllerProfile,
+          token,
+        }),
+      );
+      if (
+        getProfileUpdate.error?.message ===
+        'Request failed with status code 403'
+      ) {
+        return setTimeout(() => {
+          navigation.dispatch(StackActions.replace('LandingPage'));
+        }, 5000);
+      }
+      if (
+        getProfileUpdate.error?.message ===
+        'Request failed with status code 401'
+      ) {
+        return setTimeout(() => {
+          navigation.dispatch(StackActions.replace('LandingPage'));
+        }, 5000);
+      }
+    } catch (error) {
+      showMessage({
+        message: error.response.data.msg,
+        type: 'danger',
+      });
+    } finally {
+      setLoadingProfile(false);
+    }
+  };
   useEffect(() => {
     setLoading(true);
     getHistory(token, controller)
@@ -44,10 +88,19 @@ function Profile() {
       });
   }, []);
   console.log(profile);
+  const handleLogout = e => {
+    e.preventDefault();
+    setLoading(true);
+    logOut(token, controller);
+    dispatch(cartActions.resetCart());
+    dispatch(authAction.filter());
+    navigation.replace('LandingPage');
+  };
   // console.log(datasTransaction);
   return (
     <ScrollView style={styles.container}>
-      {profile.data.length === 0 ? (
+      <FlashMessage position="top" />
+      {profile.data.length === 0 || loadingProfile ? (
         <View
           style={{
             width: '100%',
@@ -130,7 +183,7 @@ function Profile() {
               </View>
               <Divider width={8} style={{width: '100%', marginTop: 15}} />
               <View style={styles.containerNavigation}>
-                <Pressable
+                <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
                     navigation.navigate('EditProfile');
@@ -141,37 +194,54 @@ function Profile() {
                     size={20}
                     style={styles.arrowButton}
                   />
-                </Pressable>
+                </TouchableOpacity>
               </View>
               <View style={styles.containerNavigation}>
-                <Pressable style={styles.button}>
+                <TouchableOpacity style={styles.button}>
                   <Text style={styles.textButton}>Edit Password</Text>
                   <IconComunity
                     name={'chevron-right'}
                     size={20}
                     style={styles.arrowButton}
                   />
-                </Pressable>
+                </TouchableOpacity>
               </View>
+              {data.role_id === 1 && (
+                <View style={styles.containerNavigation}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => navigation.navigate('ManageOrder')}>
+                    <View style={{flexDirection: 'row', gap: 10}}>
+                      <Text style={styles.textButton}>Manage Order</Text>
+                      {/* <Image source={manage} style={{width: 30, height: 30}} /> */}
+                    </View>
+                    <IconComunity
+                      name={'chevron-right'}
+                      size={20}
+                      style={styles.arrowButton}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
               <View style={styles.containerNavigation}>
-                <Pressable style={styles.button}>
+                <TouchableOpacity style={styles.button}>
                   <Text style={styles.textButton}>FAQ</Text>
                   <IconComunity
                     name={'chevron-right'}
                     size={20}
                     style={styles.arrowButton}
                   />
-                </Pressable>
+                </TouchableOpacity>
               </View>
               <View style={styles.containerNavigation}>
-                <Pressable style={styles.button}>
+                <TouchableOpacity style={styles.button}>
                   <Text style={styles.textButton}>Help</Text>
                   <IconComunity
                     name={'chevron-right'}
                     size={20}
                     style={styles.arrowButton}
                   />
-                </Pressable>
+                </TouchableOpacity>
               </View>
               <View
                 style={{
@@ -180,25 +250,44 @@ function Profile() {
                   paddingTop: 15,
                   paddingBottom: 100,
                 }}>
-                <Pressable style={styles.buttonSave}>
-                  <Text style={styles.textButtonSave}>Save</Text>
-                </Pressable>
+                <TouchableOpacity
+                  style={styles.buttonSave}
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <Text style={styles.textButtonSave}>Log Out</Text>
+                </TouchableOpacity>
               </View>
             </View>
           );
         })
       )}
-      {/* <View style={styles.navbar}>
-        <IconComunity
-          name={'chevron-left'}
-          size={20}
-          style={styles.icons}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        />
-        <Text style={styles.titleNavbar}>My profile</Text>
-      </View> */}
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <View>
+              <Text style={styles.modalText}>Are you sure to log out?</Text>
+            </View>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              <TouchableOpacity
+                style={[styles.buttonModal, styles.buttonClose]}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}>
+                <Text style={styles.textStyle}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleLogout}
+                style={[styles.buttonModal, styles.buttonClose]}>
+                <Text style={styles.textStyle}>Continue</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }

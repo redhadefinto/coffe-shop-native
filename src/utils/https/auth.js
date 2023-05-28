@@ -7,25 +7,16 @@ import axios from 'axios';
 // import { get } from '../localStorage'
 import {SERVER_HOST} from '@env';
 
-export const login = (email, password, controller) => {
+export const login = body => {
   // console.log(email, password
-  const body = {
-    email,
-    password,
-  };
   const url = `${SERVER_HOST}/auth`;
   return axios.post(url, body, {
-    signal: controller.signal,
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
   });
 };
 
-export const register = (email, password, phoneNumber, controller) => {
-  const body = {
-    email,
-    password,
-    phoneNumber,
-  };
-  // console.log(body)
+export const register = ({body}, controller) => {
+  console.log(body);
   const url = `${SERVER_HOST}/auth/register`;
   return axios.post(url, body, {
     signal: controller.signal,
@@ -37,9 +28,9 @@ export const getOtp = (email, controller) => {
   return axios.patch(url, {email}, {signal: controller.signal});
 };
 
-export const forgot = (email, code_otp, password, controller) => {
+export const forgot = ({body}, controller) => {
   const url = `${SERVER_HOST}/auth/forgot`;
-  const body = {email, otp: code_otp, password};
+  // const body = {email, otp: code_otp, password};
   // console.log(body)
   return axios.patch(url, body, {signal: controller.signal});
 };

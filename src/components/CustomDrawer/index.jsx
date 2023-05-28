@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   ImageBackground,
   StyleSheet,
@@ -15,17 +15,34 @@ import {
 import coffe1 from '../../assets/Products/coffe-1.png';
 import {useSelector} from 'react-redux';
 const {width} = Dimensions.get('screen');
-
+import notifee, {AndroidImportance} from '@notifee/react-native';
 const CustomDrawer = props => {
   const profileUser = useSelector(state => state.profile.data);
+  const createChannelNotif = async () => {
+    try {
+      await notifee.requestPermission();
+      await notifee.createChannel({
+        id: 'urgent',
+        name: 'Hight Notification',
+        sound: 'default',
+        vibration: true,
+        importance: AndroidImportance.HIGH,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    createChannelNotif();
+  }, []);
   // console.log(profileUser.data);
   return (
     <DrawerContentScrollView {...props}>
-      {!profileUser.data ? (
+      {profileUser.data.length === 0 ? (
         <Text>Loading</Text>
       ) : (
         <>
-          <ImageBackground style={styles.containerImage}>
+          <View style={styles.containerImage}>
             <Image
               source={
                 {uri: profileUser.data[0].image} ||
@@ -38,7 +55,7 @@ const CustomDrawer = props => {
               {profileUser.data[0].last_name}
             </Text>
             <Text style={styles.textEmail}>{profileUser.data[0].email}</Text>
-          </ImageBackground>
+          </View>
         </>
       )}
       <View style={styles.drawerListWrapper}>

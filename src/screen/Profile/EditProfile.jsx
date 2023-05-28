@@ -32,7 +32,13 @@ import {
   updateDataUser,
   uploadImage,
 } from '../../utils/https/profile';
+import {PermissionsAndroid} from 'react-native';
 import {profileAction} from '../../redux/slices/profile';
+
+import FlashMessage from 'react-native-flash-message';
+import {showMessage, hideMessage} from 'react-native-flash-message';
+import {StackActions} from '@react-navigation/native';
+
 const EditProfile = () => {
   const [Loading, setLoading] = useState(false);
   const [firstName, setFirstName] = useState('');
@@ -62,8 +68,36 @@ const EditProfile = () => {
     }
   };
 
-  const openCamera = e => {
+  const openCamera = async e => {
     e.preventDefault();
+    try {
+      const checkGranted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      );
+      if (checkGranted) {
+        console.log('Camera permission is granted.');
+      } else {
+        console.log('Camera permission is not granted.');
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'Camera Permission',
+            message: 'App needs camera permission to take pictures.',
+            buttonPositive: 'OK',
+            buttonNegative: 'Cancel',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('Camera permission granted.');
+          // You can now access the camera.
+        } else {
+          console.log('Camera permission denied.');
+          // Handle permission denied case.
+        }
+      }
+    } catch (error) {
+      console.log('Error checking camera permission:', error);
+    }
     const option = {
       mediaType: 'photo',
       quality: 1,
@@ -89,8 +123,36 @@ const EditProfile = () => {
     });
   };
 
-  const openGallery = e => {
+  const openGallery = async e => {
     e.preventDefault();
+    try {
+      const checkGranted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      );
+      if (checkGranted) {
+        console.log('Camera permission is granted.');
+      } else {
+        console.log('Camera permission is not granted.');
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'Camera Permission',
+            message: 'App needs camera permission to take pictures.',
+            buttonPositive: 'OK',
+            buttonNegative: 'Cancel',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('Camera permission granted.');
+          // You can now access the camera.
+        } else {
+          console.log('Camera permission denied.');
+          // Handle permission denied case.
+        }
+      }
+    } catch (error) {
+      console.log('Error checking camera permission:', error);
+    }
     const option = {
       mediaType: 'photo',
       quality: 1,
@@ -120,11 +182,16 @@ const EditProfile = () => {
     try {
       setModalVisible(false);
       setLoading(true);
-      setDataImage();
-      const result = uploadImage({img: dataImage}, token, controller);
-      console.log('dari result');
-      console.log(result);
-      if (!result) return;
+      if (!dataImage) {
+        return showMessage({
+          message: 'Image Null',
+          type: 'danger',
+        });
+      }
+      // setDataImage();
+      const result = await uploadImage({img: dataImage}, token, controller);
+      console.log('update profile', result);
+      // if (!result) return;
       const getProfileUpdate = await dispatch(
         profileAction.getProfileThunk({
           controllerProfile,
@@ -147,9 +214,22 @@ const EditProfile = () => {
           navigation.dispatch(StackActions.replace('LandingPage'));
         }, 5000);
       }
+      setDataImage();
+      // console.log(result.data.msg);
+      showMessage({
+        message: 'Update Success',
+        type: 'success',
+      });
+      seTimeOut(() => {
+        navigation.goBack();
+      }, 1000);
     } catch (error) {
-      console.log('error dari catch');
-      console.log(error);
+      setDataImage();
+      console.log('console dari error', error.response.data.msg);
+      showMessage({
+        message: error.response.data.msg,
+        type: 'danger',
+      });
     } finally {
       setLoading(false);
     }
@@ -176,35 +256,27 @@ const EditProfile = () => {
         first_name: firstName,
         birthday: selectedDate,
         address,
-        phone_number: phone,
+        phone_number: `${phone}`,
         gender,
       };
       const result = await patchProfile(body, token, controller);
-      if (!result) return;
-      const getProfileUpdate = await dispatch(
-        profileAction.getProfileThunk({
-          controllerProfile,
-          token,
-        }),
-      );
-      if (
-        getProfileUpdate.error?.message ===
-        'Request failed with status code 403'
-      ) {
-        return setTimeout(() => {
-          navigation.dispatch(StackActions.replace('LandingPage'));
-        }, 5000);
-      }
-      if (
-        getProfileUpdate.error?.message ===
-        'Request failed with status code 401'
-      ) {
-        return setTimeout(() => {
-          navigation.dispatch(StackActions.replace('LandingPage'));
-        }, 5000);
+      // if (!result) return;
+      console.log('update image', result);
+      if (result) {
+        showMessage({
+          message: 'update Succes',
+          type: 'success',
+        });
+        setTimeout(() => {
+          navigation.goBack();
+        }, 1000);
       }
     } catch (error) {
       console.log(error);
+      showMessage({
+        message: error.response.data.msg,
+        type: 'danger',
+      });
     } finally {
       setLoading(false);
     }
@@ -213,6 +285,7 @@ const EditProfile = () => {
   // console.log(dataImage);
   return (
     <>
+      <FlashMessage position="top" />
       {Loading ? (
         <View style={styles.screenLoad}>
           {/* <LoaderSpin /> */}

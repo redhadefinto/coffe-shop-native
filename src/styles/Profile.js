@@ -74,8 +74,9 @@ const styles = StyleSheet.create({
   },
   seemore: {
     fontFamily: 'Poppins-Regular',
-    fontSize: 12,
+    fontSize: 17,
     color: '#6A4029',
+    fontWeight: '900',
   },
   slider: {
     display: 'flex',
@@ -120,6 +121,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     fontSize: 18,
     color: '#6A4029',
+    fontWeight: '900',
   },
   textButtonSave: {
     fontFamily: 'Poppins-Bold',
@@ -130,6 +132,55 @@ const styles = StyleSheet.create({
   arrowButton: {
     fontSize: 30,
     color: '#6A4029',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonModal: {
+    borderRadius: 20,
+    width: 100,
+    marginHorizontal: 15,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: '#6A4029',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  textStyleBlack: {
+    color: '#6A4029',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    fontFamily: 'Poppins-SemiBold',
+    // width: 200,
+    color: 'black',
+    fontSize: 20,
+    marginBottom: 25,
+    textAlign: 'center',
   },
 });
 

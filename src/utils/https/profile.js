@@ -15,16 +15,14 @@ export const getProfile = (controllerProfile, token) => {
 };
 
 export const uploadImage = ({img}, token, controller) => {
-  console.log('dari http reques');
-  console.log(img);
+  // console.log('image', img);
   const fromData = new FormData();
   fromData.append('image', {
     uri: img.uri,
     name: img.fileName,
     type: img.type,
+    size: img.fileSize,
   });
-  console.log('ini form data');
-  console.log(fromData);
   const url = `${SERVER_HOST}/cloud/user`;
   return axios.post(url, fromData, {
     signal: controller.signal,
@@ -37,11 +35,11 @@ export const uploadImage = ({img}, token, controller) => {
 
 export const patchProfile = (body, token, controller) => {
   for (let key in body) {
-    if (typeof body[key] === 'string' && body[key] === '') {
+    if ((typeof body[key] === 'string' && body[key] === '') || !body[key]) {
       delete body[key]; // Menghapus properti jika nilainya adalah string kosong
     }
   }
-
+  // console.log('body', body);
   // if (body.birthday) {
   //   const datetime = body.birthday.split('T')[0]; // Memisahkan tanggal dan waktu
   //   body.birthday = datetime; // Menggunakan hanya bagian tanggal

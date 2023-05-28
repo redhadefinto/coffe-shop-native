@@ -30,7 +30,7 @@ const Delivery = () => {
     dispatch(cartActions.deliveryMethod(deliveryMethod));
     navigation.navigate('Payment', {subtotal: route.params.total});
   };
-  console.log(profile.data);
+  // console.log(profile.data);
   return (
     <NativeBaseProvider>
       <ScrollView>

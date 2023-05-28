@@ -42,7 +42,7 @@ function SplashScreen() {
         }, 5000);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setTimeout(() => {
         navigation.dispatch(StackActions.replace('LandingPage'));
       }, 5000);
@@ -72,8 +72,9 @@ function SplashScreen() {
         setTimeout(() => {
           navigation.dispatch(StackActions.replace('LandingPage'));
         }, 5000);
+      } else {
+        fetchProfile();
       }
-      fetchProfile();
     }
 
     return () => {

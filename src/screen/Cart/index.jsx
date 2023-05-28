@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   Pressable,
+  ToastAndroid,
 } from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -31,62 +32,6 @@ const Cart = () => {
     return parseFloat(price)
       .toFixed()
       .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-  };
-
-  const getItemTotal = () => {
-    // let price = cartState.price * quantity;
-    // return costing(price);a
-  };
-
-  const getTotal = () => {
-    // let price = cartState.price * quantity;
-    // let cost = 0;
-    // if (cartState.size === '2') cost = 3000;
-    // if (cartState.size === '3') cost = 5000;
-    // let tax = 0.1 * (price + cost);
-    // const total = price + tax + cost;
-    // return costing(total);
-  };
-
-  const getSizeCost = () => {
-    // let cost = 0;
-    // if (cartState.size === '2') cost = 3000;
-    // if (cartState.size === '3') cost = 5000;
-    // return costing(cost);
-  };
-
-  const getTaxCost = () => {
-    // let price = cartState.price * quantity;
-    // let cost = 0;
-    // if (cartState.size === '2') cost = 3000;
-    // if (cartState.size === '3') cost = 5000;
-    // let tax = 0.1 * (price + cost);
-    // return costing(tax);
-  };
-  const handleCheckout = () => {
-    // let dataCart = cartState;
-    // console.log(dataCart);
-    // let price = cartState.price * quantity;
-    // let cost = 0;
-    // if (cartState.size === '2') cost = 3000;
-    // if (cartState.size === '3') cost = 5000;
-    // let tax = 0.1 * (price + cost);
-    // const total = price + tax + cost;
-    // const data = {
-    //   id: dataCart.id,
-    //   delivery_address: user.address,
-    //   productName: dataCart.productName,
-    //   promo_id: null,
-    //   total: total,
-    //   image: dataCart.image,
-    //   price: dataCart.price,
-    //   size: dataCart.size,
-    //   qty: quantity,
-    // };
-    // console.log(data);
-    // dispatch(transactionActions.dataTransaction(data));
-    // // dispatch(cartAction.createTransactionThunk(data, token));
-    // navigation.navigate('Checkout');
   };
   let subtotal = 0;
   let taxFee = 0;
@@ -192,6 +137,13 @@ const Cart = () => {
         <View style={{paddingTop: 20, paddingBottom: 120}}>
           <TouchableOpacity
             onPress={() => {
+              if (total === 0) {
+                return ToastAndroid.showWithGravity(
+                  'No Product in Cart',
+                  ToastAndroid.SHORT,
+                  ToastAndroid.TOP,
+                );
+              }
               navigation.navigate('Delivery', {total});
             }}
             activeOpacity={0.8}>

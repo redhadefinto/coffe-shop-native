@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
   ToastAndroid,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
@@ -15,6 +16,11 @@ import iconGoogle from '../../assets/icon/icon-google.png';
 import {useNavigation} from '@react-navigation/native';
 import {authAction} from '../../redux/slices/auth';
 import {profileAction} from '../../redux/slices/profile';
+import {StackActions} from '@react-navigation/native';
+// import messeging from '@react-native-firebase/messaging';
+import FlashMessage from 'react-native-flash-message';
+import {showMessage, hideMessage} from 'react-native-flash-message';
+
 // import Loaders from '../../components/Loaders';
 const Login = () => {
   const controller = React.useMemo(() => new AbortController(), []);
@@ -27,57 +33,59 @@ const Login = () => {
     email: '',
     password: '',
   });
-  const [IsLoading, setIsLoading] = useState(true);
+  const [IsLoading, setIsLoading] = useState(false);
   const onChangeHandler = (text, type) => {
     setForm(form => ({...form, [type]: text}));
   };
-  const loginHandler = e => {
-    e.preventDefault();
+  const loginHandler = async () => {
     if (form.email === '' || form.password === '') {
-      ToastAndroid.showWithGravity(
-        `Login successfully`,
-        ToastAndroid.SHORT,
-        ToastAndroid.TOP,
-      );
+      showMessage({
+        message: 'Email/Password required',
+        type: 'danger',
+      });
+      setIsLoading(false);
       return;
     }
     setIsLoading(true);
-    dispatch(
-      authAction.getAuthThunk(
-        {email: form.email, password: form.password},
-        controller,
-      ),
-    )
-      .then(result => {
-        // console.log(result);
-        if (result.payload.message === 'Request failed with status code 401') {
-          setIsLoading(false);
-          ToastAndroid.showWithGravity(
-            'Email / Password is Invalid !',
-            ToastAndroid.SHORT,
-            ToastAndroid.TOP,
-          );
-          setForm({...form, password: ''});
-          return;
-        }
-        // console.log(result.payload.token);
-        if (result.payload && result.payload.token) {
-          setIsLoading(false);
-          dispatch(
-            profileAction.getProfileThunk({
-              controllerProfile,
-              token: result.payload.token,
-            }),
-          );
-          navigation.navigate('DrawerNavigator');
-        }
-      })
-      .catch(err => console.log(err))
-      .finally(() => setIsLoading(false));
+    try {
+      const result = await dispatch(
+        authAction.getAuthThunk({email: form.email, password: form.password}),
+      );
+      // console.log(result);
+      if (
+        result.payload === 'Email/Password Salah' ||
+        result.payload === 'Email Not Registered'
+      ) {
+        setIsLoading(false);
+        return showMessage({
+          message: result.payload,
+          type: 'danger',
+        });
+      }
+      const profile = dispatch(
+        profileAction.getProfileThunk({
+          controllerProfile,
+          token: result.payload.token,
+        }),
+      );
+      if (profile) {
+        navigation.replace('DrawerNavigator');
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.log('error', error);
+      showMessage({
+        message: error,
+        type: 'danger',
+      });
+      setIsLoading(false);
+    }
   };
+
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
+      <FlashMessage position="top" />
       {/* {IsLoading && <Loaders />} */}
       <ImageBackground source={bgLogin} style={styles.image}>
         <View style={styles.overlay}>
@@ -115,7 +123,11 @@ const Login = () => {
               onPressOut={() => setButtonPressedRegist(false)}
               onPress={loginHandler}>
               <Text style={[styles.textButton, styles.colorBtnRegist]}>
-                Login
+                {IsLoading ? (
+                  <ActivityIndicator size="large" color="#6A4029" />
+                ) : (
+                  'Login'
+                )}
               </Text>
             </TouchableOpacity>
             <View style={styles.containerLine}>

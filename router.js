@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -28,10 +29,20 @@ import Payment from './src/screen/Payment';
 import CustomTabBar from './src/components/CustomTabBar/index';
 import SplashScreen from './src/screen/SplashScreen';
 import EditProfile from './src/screen/Profile/EditProfile';
+import CreateProduct from './src/screen/CreateProduct';
+import CreatePromo from './src/screen/CreatePromo';
+import EditProduct from './src/screen/EditProduct';
+import EditPromo from './src/screen/EditPromo';
+import ManageOrder from './src/screen/Manage';
+import Forgot from './src/screen/Forgot';
+import History from './src/screen/History';
+import ChatDetail from './src/screen/Chat/ChatDetail';
+import {useDispatch, useSelector} from 'react-redux';
+import {profileAction} from './src/redux/slices/profile';
+import {StackActions} from '@react-navigation/native';
 
 const DrawerNavigator = props => {
   const {Navigator, Screen} = createDrawerNavigator();
-  const navigation = useNavigation();
   const navigateToCart = () => {
     props.navigation.navigate('Home', {screen: 'Cart'});
   };
@@ -151,7 +162,7 @@ const BottomTabs = props => {
         tabBarIcon: ({color, size, focused}) => {
           let iconSource;
 
-          if (route.name === 'Home') {
+          if (route.name === 'HomePage') {
             iconSource = focused
               ? require('./src/assets/icon/home_active.png')
               : require('./src/assets/icon/home_inactive.png');
@@ -178,7 +189,7 @@ const BottomTabs = props => {
         },
       })}>
       <Screen
-        name="Home"
+        name="HomePage"
         component={HomePage}
         listeners={() => ({
           focus: navigateToHome,
@@ -226,6 +237,53 @@ const BottomTabs = props => {
 
 const StackNavigator = () => {
   const {Navigator, Screen} = createStackNavigator();
+  const dispatch = useDispatch();
+  const {token} = useSelector(state => state.auth.data);
+  const navigation = useNavigation();
+  const controllerProfile = useMemo(() => new AbortController(), []);
+  const fetchProfile = async () => {
+    try {
+      const result = await dispatch(
+        profileAction.getProfileThunk({
+          controllerProfile,
+          token,
+        }),
+      );
+      console.log('result router', result.payload);
+      if (result.error?.message === 'Request failed with status code 403') {
+        return setTimeout(() => {
+          navigation.dispatch(StackActions.replace('LandingPage'));
+        }, 5000);
+      }
+      if (result.error?.message === 'Request failed with status code 401') {
+        return setTimeout(() => {
+          navigation.dispatch(StackActions.replace('LandingPage'));
+        }, 5000);
+      }
+    } catch (error) {
+      console.log('error dari router', error.response.data);
+      setTimeout(() => {
+        navigation.dispatch(StackActions.replace('LandingPage'));
+      }, 5000);
+    }
+  };
+
+  useEffect(() => {
+    const handleTokenExpiration = () => {
+      if (!token) {
+        setTimeout(() => {
+          navigation.dispatch(StackActions.replace('LandingPage'));
+        }, 5000);
+      } else {
+        fetchProfile();
+      }
+    };
+
+    const unsubscribe = navigation.addListener('focus', handleTokenExpiration);
+
+    return unsubscribe;
+  }, [navigation, token]);
+
   return (
     <Navigator initialRouteName="SplashScreen">
       <Screen
@@ -271,19 +329,20 @@ const StackNavigator = () => {
         }}
       />
       <Screen
+        name="Forgot"
+        component={Forgot}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Screen
         name="Favorite"
         component={Favorite}
         options={{
           headerShown: false,
         }}
       />
-      <Screen
-        name="ProductAll"
-        component={ProductAll}
-        options={{
-          headerShown: false,
-        }}
-      />
+      <Screen name="ProductAll" component={ProductAll} />
       <Screen
         name="ProductDetail"
         component={ProductDetail}
@@ -297,6 +356,19 @@ const StackNavigator = () => {
       <Screen name="Delivery" component={Delivery} />
       <Screen name="Payment" component={Payment} />
       <Screen name="EditProfile" component={EditProfile} />
+      <Screen name="CreateProduct" component={CreateProduct} />
+      <Screen name="CreatePromo" component={CreatePromo} />
+      <Screen name="EditProduct" component={EditProduct} />
+      <Screen name="EditPromo" component={EditPromo} />
+      <Screen name="ManageOrder" component={ManageOrder} />
+      <Screen name="History" component={History} />
+      <Screen
+        name="ChatDetail"
+        component={ChatDetail}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Navigator>
   );
 };

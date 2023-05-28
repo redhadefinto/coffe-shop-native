@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 import React, {useMemo, useState} from 'react';
 // import ButtonSecondary from '../../components/ButtonSecondary';
@@ -21,6 +22,8 @@ import {useNavigation} from '@react-navigation/native';
 // import {cartAction} from '../../redux/slices/cart';
 // import ButtonPrimary from '../../components/ButtonPrimary';
 import {cartActions} from '../../redux/slices/cart';
+
+import notifee from '@notifee/react-native';
 
 const Payment = () => {
   const dispatch = useDispatch();
@@ -54,18 +57,32 @@ const Payment = () => {
       payment_id: payment,
       delivery_id: cartRedux.delivery,
       notes: '',
-      status_id: 1,
+      status_id: 2,
       products: dataShopping,
     };
     // console.log('BODY FETCHING', body);
     setLoading(true);
     try {
       const result = await createTransactions({datas, token, controller});
-      console.log('ADD TRANSACTION', result);
+      // console.log('ADD TRANSACTION', result);
       if (result.status === 200) {
         setLoading(false);
-        // setToastInfo({msg: 'Transaction Success', display: 'success'});
-        // setToast(true);
+        try {
+          const test = await notifee.displayNotification({
+            android: {channelId: 'urgent'},
+            title: 'Coffein',
+            subtitle: 'Thank You',
+            body: 'Your transaction order success',
+          });
+          console.log(test);
+        } catch (error) {
+          console.log(error);
+        }
+        ToastAndroid.showWithGravity(
+          'Transaction Succes',
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP,
+        );
         dispatch(cartActions.resetCart());
         setSuccess(true);
       }

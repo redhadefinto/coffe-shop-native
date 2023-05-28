@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,14 +9,99 @@ import {
   TextInput,
   InputModeOptions,
   ScrollView,
+  ToastAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import bgSignUp from '../../assets/background/bg-sign-up.png';
 import iconGoogle from '../../assets/icon/icon-google.png';
+import {register} from '../../utils/https/auth';
+import {useNavigation} from '@react-navigation/native';
 
 const SignUp = () => {
   const [buttonPressedRegist, setButtonPressedRegist] = useState(false);
   const [buttonPressedLogin, setButtonPressedLogin] = useState(false);
+  const navigation = useNavigation();
+  const controller = useMemo(() => new AbortController(), []);
   const inputAccessoryViewID = 'uniqueID';
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [err, setErr] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [sukses, setSukses] = useState(false);
+  const registerHandler = async e => {
+    e.preventDefault();
+    setErr(false);
+    if (email === '') {
+      setErr(true);
+      ToastAndroid.showWithGravityAndOffset(
+        `Email require`,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
+      return;
+    }
+    if (password === '') {
+      setErr(true);
+      ToastAndroid.showWithGravityAndOffset(
+        `Password require`,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
+      return;
+    }
+    if (phone === '') {
+      setErr(true);
+      ToastAndroid.showWithGravityAndOffset(
+        `phone number require`,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValidEmail = emailRegex.test(email);
+    if (!isValidEmail) {
+      setErr(true);
+      ToastAndroid.showWithGravityAndOffset(
+        `Email Not valid`,
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
+      return;
+    }
+    try {
+      setLoading(true);
+      const body = {
+        email,
+        password,
+        phone_number: phone,
+      };
+      const result = await register({body}, controller);
+      if (result) {
+        setSukses(true);
+        ToastAndroid.showWithGravityAndOffset(
+          `Create Account succes`,
+          ToastAndroid.SHORT,
+          ToastAndroid.TOP,
+          25,
+          50,
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <View style={styles.container}>
       <ImageBackground source={bgSignUp} style={styles.image}>
@@ -30,16 +115,30 @@ const SignUp = () => {
               style={styles.input}
               inputAccessoryViewID={inputAccessoryViewID}
               placeholderTextColor={'white'}
+              onChangeText={text => {
+                setErr(false);
+                setEmail(text);
+              }}
             />
             <TextInput
               placeholder={'Enter your password'}
               style={styles.input}
               placeholderTextColor={'white'}
+              onChangeText={text => {
+                setErr(false);
+                setPassword(text);
+              }}
+              secureTextEntry={true}
             />
             <TextInput
               placeholder="Enter your phone number"
               style={styles.input}
               placeholderTextColor={'white'}
+              keyboardType="numeric"
+              onChangeText={text => {
+                setErr(false);
+                setPhone(text);
+              }}
             />
             <TouchableOpacity
               style={[
@@ -48,9 +147,16 @@ const SignUp = () => {
               ]}
               activeOpacity={0.9}
               onPressIn={() => setButtonPressedRegist(true)}
+              onPress={sukses ? navigation.navigate('Login') : registerHandler}
               onPressOut={() => setButtonPressedRegist(false)}>
               <Text style={[styles.textButton, styles.colorBtnRegist]}>
-                Create Account
+                {loading ? (
+                  <ActivityIndicator size="large" color="#FFBA33" />
+                ) : sukses ? (
+                  'Go To Login ?'
+                ) : (
+                  'Create Account'
+                )}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

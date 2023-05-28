@@ -3,9 +3,6 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 
 import {login} from '../../utils/https/auth';
 
-// const controller = new AbortController();
-// const signal = controller.signal;
-
 const initialState = {
   data: [],
   isLoading: false,
@@ -16,16 +13,19 @@ const initialState = {
 
 const getAuthThunk = createAsyncThunk(
   'auth/post',
-  async ({email, password}, controller) => {
-    // const contr  oller = new AbortController();
+  async (body, {rejectWithValue, fulfillWithValue}) => {
+    // console.log('dataaa', body);
     try {
-      // console.log(response.data)
-      // console.log(email);
-      // console.log(password);
-      const response = await login(email, password, controller);
-      return response.data;
+      const response = await login(body);
+      //   console.log('resss', response);
+      return fulfillWithValue(response.data);
     } catch (err) {
-      return err;
+      console.log(err.response.data);
+      if (err.response.status === 401) {
+        return rejectWithValue(err.response.data.msg);
+      }
+      //   console.log('errredux', err.response.data.msg);
+      return rejectWithValue(err.response.data.msg);
     }
   },
 );
@@ -37,11 +37,6 @@ const authSlice = createSlice({
     filter: () => {
       return initialState;
     },
-    // updateProfile: (prevState) => {
-    //   return {
-    //     ...prevState,
-    //   }
-    // }
   },
   extraReducers: builder => {
     builder

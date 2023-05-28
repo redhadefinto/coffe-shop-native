@@ -23,6 +23,15 @@ export const getHistory = (token, controller) => {
   });
 };
 
+export const transactionsAdmin = (token, controller) => {
+  // console.log(token)
+  const url = `${SERVER_HOST}/transactions/admin`;
+  return axios.get(url, {
+    signal: controller.signal,
+    headers: {Authorization: `Bearer ${token}`},
+  });
+};
+
 export const getHistoryDetails = (token, tpsId, controller) => {
   // console.log(token)
   const url = `${SERVER_HOST}/transactions/detail`;
@@ -33,6 +42,18 @@ export const getHistoryDetails = (token, tpsId, controller) => {
     },
   });
 };
+
+export const changeOrderDone = (body, token, controller) => {
+  // console.log(token)
+  const url = `${SERVER_HOST}/transactions`;
+  return axios.patch(url, body, {
+    signal: controller.signal,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export const deleteHistory = (token, tpsId, controller) => {
   const url = `${SERVER_HOST}/transactions`;
   const config = {

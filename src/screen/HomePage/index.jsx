@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import React, {useState, useEffect, useMemo, useCallback} from 'react';
 import Navbar from '../../components/Navbar';
@@ -14,6 +15,7 @@ import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import coffe1 from '../../assets/Products/coffe-1.png';
 import coffe2 from '../../assets/Products/coffe-2.png';
 import coffe3 from '../../assets/Products/coffe-3.png';
+import {StackActions} from '@react-navigation/native';
 // import {BottomTabs, DrawerNavigator} from '../../../router';
 import {useNavigation} from '@react-navigation/native';
 import CardHome from '../../components/CardHome';
@@ -24,18 +26,22 @@ import {getProducts} from '../../utils/https/products';
 import debounce from 'lodash.debounce';
 import LoadingBrown from '../../components/LoadingBrown';
 import privateRoute from '../../utils/wrapper/private.route';
-const HomePage = () => {
+
+import {BackHandler} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
+
+const HomePage = ({navigation}) => {
   const [borderSearch, setBorderSearch] = useState(false);
   const controllerProfile = useMemo(() => new AbortController(), []);
   const controller = useMemo(() => new AbortController(), []);
   // const profileUser = useSelector(state => state.profile.data);
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(true);
   const profileUser = useSelector(state => state.profile.data);
-  // const {token, id} = useSelector(state => state.auth.data.data);
+  const cek = useSelector(state => state.auth);
   const {token} = useSelector(state => state.auth.data);
-  // console.log('inisial token');
+  const [modalVisible, setModalVisible] = useState(false);
   // console.log(token);
 
   const [limit, setLimit] = useState(8);
@@ -43,67 +49,63 @@ const HomePage = () => {
   const [search, setSearch] = useState('');
   const [dataProduct, setDataProduct] = useState([]);
   const [metaData, setMetaData] = useState([]);
-  // console.log(authUser);
-  // const id = useSelector(state => state.auth.data.data.id);
-  const datas = [
-    {
-      image: coffe1,
-      title: 'Hazelnut Latte',
-      price: 'IDR 25.000',
-    },
-    {
-      image: coffe2,
-      title: 'Creamy Ice Latte',
-      price: 'IDR 27.000',
-    },
-    {
-      image: coffe3,
-      title: 'Creamy Ice Latte',
-      price: 'IDR 27.000',
-    },
-  ];
-  const fetchProfile = async () => {
-    // console.log('start');
-    try {
-      const result = await dispatch(
-        profileAction.getProfileThunk({
-          controllerProfile,
-          token,
-        }),
-      );
-      // console.log(result);
-      if (result.error?.message === 'Request failed with status code 403') {
-        return setTimeout(() => {
-          navigation.dispatch(StackActions.replace('LandingPage'));
-        }, 5000);
-      }
-      if (result.error?.message === 'Request failed with status code 401') {
-        return setTimeout(() => {
-          navigation.dispatch(StackActions.replace('LandingPage'));
-        }, 5000);
-      }
-      if (result.payload?.data) {
-        setLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setTimeout(() => {
-        navigation.dispatch(StackActions.replace('LandingPage'));
-      }, 5000);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchProfile = async () => {
+  //   // console.log('start');
+  //   try {
+  //     const result = await dispatch(
+  //       profileAction.getProfileThunk({
+  //         controllerProfile,
+  //         token,
+  //       }),
+  //     );
+  //     // console.log(result);
+  //     if (result.error?.message === 'Request failed with status code 403') {
+  //       return setTimeout(() => {
+  //         navigation.dispatch(StackActions.replace('LandingPage'));
+  //       }, 5000);
+  //     }
+  //     if (result.error?.message === 'Request failed with status code 401') {
+  //       return setTimeout(() => {
+  //         navigation.dispatch(StackActions.replace('LandingPage'));
+  //       }, 5000);
+  //     }
+  //     if (result.payload?.data) {
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setTimeout(() => {
+  //       navigation.dispatch(StackActions.replace('LandingPage'));
+  //     }, 5000);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        BackHandler.exitApp(); // Keluar dari aplikasi saat tombol "Kembali" ditekan
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', backAction);
+
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', backAction);
+      };
+    }, []),
+  );
 
   useEffect(() => {
     let query = `name=${search}&page=1&categories=${categories}&limit=${limit}`;
     setLoading(true);
     if (!token) {
-      setTimeout(() => {
+      return setTimeout(() => {
         navigation.dispatch(StackActions.replace('LandingPage'));
       }, 5000);
     }
-    fetchProfile();
+    // fetchProfile();
     getProducts(controller, query)
       .then(({data}) => {
         setDataProduct(data.data);
@@ -113,25 +115,25 @@ const HomePage = () => {
         console.log(error);
       })
       .finally(() => setLoading(false));
-  }, [token]);
+  }, [token, categories]);
   useEffect(() => {
-    // navigation.navigate('ProductAll', {
-    //   search,
-    //   categories,
-    // });
+    navigation.navigate('ProductAll', {
+      search,
+      categories,
+    });
   }, [categories, search]);
   const debounceHandler = useCallback(
     debounce(text => {
       console.log(text);
       setSearch(text);
-    }, 700),
+    }, 1500),
     [],
   );
   const searchHandler = text => {
     // if (!text) return;
     debounceHandler(text);
   };
-  console.log(profileUser);
+  console.log(cek);
   // console.log(dataProduct);
   return (
     <ScrollView style={styles.container}>
@@ -148,6 +150,7 @@ const HomePage = () => {
             <TextInput
               style={styles.inputSearch}
               placeholder="Search"
+              placeholderTextColor={'#808080'}
               onFocus={() => {
                 setBorderSearch(true);
               }}
@@ -156,11 +159,6 @@ const HomePage = () => {
               }}
               onChangeText={text => searchHandler(text)}
             />
-            {profileUser.data[0].role_id === 1 && (
-              <TouchableOpacity style={styles.containerIconPencil}>
-                <Text style={styles.iconPlus}>+</Text>
-              </TouchableOpacity>
-            )}
           </View>
         </View>
         <ScrollView
@@ -171,7 +169,9 @@ const HomePage = () => {
           overScrollMode="always">
           <TouchableOpacity
             style={styles.categoriesTitle}
-            onPress={() => setCategories('')}>
+            onPress={() => {
+              setCategories('');
+            }}>
             <Text
               style={[
                 styles.categoriesText,
@@ -182,7 +182,9 @@ const HomePage = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.categoriesTitle}
-            onPress={() => setCategories(1)}>
+            onPress={() => {
+              setCategories(1);
+            }}>
             <Text
               style={[
                 styles.categoriesText,
@@ -193,7 +195,9 @@ const HomePage = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.categoriesTitle}
-            onPress={() => setCategories(2)}>
+            onPress={() => {
+              setCategories(2);
+            }}>
             <Text
               style={[
                 styles.categoriesText,
@@ -204,7 +208,9 @@ const HomePage = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.categoriesTitle}
-            onPress={() => setCategories(3)}>
+            onPress={() => {
+              setCategories(3);
+            }}>
             <Text
               style={[
                 styles.categoriesText,
@@ -223,14 +229,16 @@ const HomePage = () => {
                 categories,
               })
             }>
-            <Text style={{color: '#6A4029', fontWeight: '900'}}>See more</Text>
+            <Text style={{color: '#6A4029', fontWeight: '900', fontSize: 18}}>
+              See more
+            </Text>
           </TouchableOpacity>
         </View>
         <ScrollView style={styles.containerProductMain} horizontal={true}>
           {!dataProduct || loading ? (
             <View
               style={{
-                width: '100%',
+                width: 350,
                 height: '80%',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -247,12 +255,60 @@ const HomePage = () => {
                   key={idx}
                   id={data.id}
                   role_id={profileUser.data[0].role_id}
+                  discount={data.discount}
                 />
               );
             })
           )}
         </ScrollView>
+        <View style={styles.wrappAdd}>
+          {profileUser.data[0].role_id === 1 && (
+            <TouchableOpacity
+              style={styles.containerIconPencil}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.iconPlus}>+</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </ScrollView>
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <View style={{display: 'flex', gap: 30}}>
+              <TouchableOpacity
+                style={[styles.buttonModal]}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                  navigation.navigate('CreateProduct');
+                }}>
+                <Text style={styles.textStyleBlack}>New Product</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                  navigation.navigate('CreatePromo');
+                }}
+                style={[styles.buttonModal]}>
+                <Text style={styles.textStyleBlack}>New Promo</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{marginTop: 30}}>
+              <TouchableOpacity
+                style={[styles.buttonModal, styles.buttonClose]}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}>
+                <Text style={styles.textStyle}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -269,8 +325,11 @@ const styles = StyleSheet.create({
   mainContainer: {
     marginTop: 20,
     flex: 1,
+    position: 'relative',
+    // minHeight: 700,
     // paddingBottom: '25%',
     // paddingBottom: '45%',
+    marginBottom: 100,
   },
   textActive: {
     color: '#6A4029',
@@ -324,6 +383,7 @@ const styles = StyleSheet.create({
   },
   categoriesText: {
     fontSize: 17,
+    color: '#808080',
   },
   headerMain: {
     paddingRight: 40,
@@ -409,5 +469,65 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 30,
     fontWeight: '900',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonModal: {
+    borderRadius: 20,
+    width: 150,
+    marginHorizontal: 20,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: '#FFBA33',
+  },
+  buttonClose: {
+    backgroundColor: '#6A4029',
+    width: 250,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  textStyleBlack: {
+    color: '#6A4029',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    fontFamily: 'Poppins-SemiBold',
+    // width: 200,
+    color: 'black',
+    fontSize: 20,
+    marginBottom: 25,
+    textAlign: 'center',
+  },
+  wrappAdd: {
+    position: 'absolute',
+    justifyContent: 'center',
+    // alignItems: 'center',
+    // borderWidth: 2,
+    bottom: 70,
+    right: 15,
+    // marginBottom: 100,
   },
 });

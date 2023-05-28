@@ -60,11 +60,14 @@ const styles = StyleSheet.create({
   btnWrapper: {
     flex: 1,
     alignItems: 'center',
+    // borderWidth: 2,
+    // justifyContent: 'center',
+    // marginTop: 20,
   },
   activeBtn: {
     flex: 1,
     position: 'absolute',
-    top: -30,
+    top: -25,
     width: 50,
     height: 50,
     borderRadius: 50 / 2,
@@ -80,9 +83,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
+    // borderWidth: 2,
   },
   svgGapFiller: {
     flex: 1,
     backgroundColor: 'white',
+    // borderWidth: 2,
   },
 });

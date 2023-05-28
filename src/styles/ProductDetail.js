@@ -204,6 +204,30 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     fontSize: 8,
   },
+  containerDiscount: {
+    width: 70,
+    height: 50,
+    backgroundColor: 'white',
+    position: 'absolute',
+    right: -50,
+    top: -20,
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+    borderRadius: 20,
+    shadowColor: 'black',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  textDiscount: {
+    color: 'black',
+    fontWeight: '900',
+    fontSize: 18,
+  },
 });
 
 export default styles;

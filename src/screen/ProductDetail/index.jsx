@@ -31,7 +31,10 @@ import {
 } from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {getProductsDetail} from '../../utils/https/products';
+import {
+  getProductsDetail,
+  getProductsDetailWithPromo,
+} from '../../utils/https/products';
 import IconComunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch} from 'react-redux';
 import {cartActions} from '../../redux/slices/cart';
@@ -41,14 +44,26 @@ const ProductDetail = () => {
   const dispatch = useDispatch();
   const controller = useMemo(() => new AbortController(), []);
   const [datas, setDatas] = useState();
+  const [price, setPrice] = useState();
   const [isLoading, setLoading] = useState();
   const router = useRoute();
   const qty = 1;
   const id = router.params.prodId;
+  const discount = router.params.discount;
   // console.log(router.params.prodId);
   const CartHandler = () => {
     if (!sizes) {
       return;
+    }
+    let discountedPrice;
+    if (discount) {
+      let price;
+      let persen = discount;
+      if (datas) {
+        price = datas[0].price;
+      }
+      const discountAmount = (price * persen) / 100;
+      discountedPrice = price - discountAmount;
     }
     const cart = {
       id: datas[0].id,
@@ -56,7 +71,8 @@ const ProductDetail = () => {
       name: datas[0].product_name,
       sizes: parseInt(sizes),
       qty,
-      price: datas[0].price,
+      price: discountedPrice || datas[0].price,
+      discount: discount,
     };
     dispatch(cartActions.addtoCart(cart));
     return ToastAndroid.showWithGravityAndOffset(
@@ -70,23 +86,48 @@ const ProductDetail = () => {
   const navigation = useNavigation();
   useEffect(() => {
     setLoading(true);
-    getProductsDetail(controller, id)
-      .then(({data}) => {
-        setDatas(data.data);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    if (discount !== null) {
+      getProductsDetailWithPromo(controller, id)
+        .then(({data}) => {
+          setDatas(data.data);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      getProductsDetail(controller, id)
+        .then(({data}) => {
+          setDatas(data.data);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   }, [id]);
   const costing = price => {
     return parseFloat(price)
       .toFixed()
       .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
   };
-  // console.log(datas);
+
+  const handleDiscount = () => {
+    let price;
+    let persen = discount;
+    if (datas) {
+      price = datas[0].price;
+    }
+    const discountAmount = (price * persen) / 100;
+    const discountedPrice = price - discountAmount;
+    // setPrice(discountedPrice);
+    return discountedPrice;
+  };
+  console.log(datas);
   return (
     <ScrollView style={styles.container}>
       <View style={styles.navbar}>
@@ -117,7 +158,16 @@ const ProductDetail = () => {
             return (
               <View key={idx}>
                 <View style={styles.price}>
-                  <Text style={styles.priceText}>RP{costing(data.price)}</Text>
+                  {discount && (
+                    <View style={styles.containerDiscount}>
+                      <Text style={styles.textDiscount}>{discount}%</Text>
+                    </View>
+                  )}
+                  <Text style={styles.priceText}>
+                    {discount
+                      ? `Rp${costing(handleDiscount())}`
+                      : `RP${costing(data.price)}`}
+                  </Text>
                 </View>
                 <View style={styles.top}>
                   <Image source={{uri: data.image}} style={styles.product} />
@@ -137,10 +187,8 @@ const ProductDetail = () => {
                     </Text>
                   </Text>
                   <Text style={styles.description}>
-                    Cold brewing is a method of brewing that combines ground
-                    coffee and cool water and uses time instead of heat to
-                    extract the flavor. It is brewed in small batches and
-                    steeped for as long as 48 hours.
+                    {data.desc ||
+                      `Cold brewing is a method of brewing that combines groundcoffee and cool water and uses time instead of heat toextract the flavor. It is brewed in small batches and steeped for as long as 48 hours.`}
                   </Text>
                   <Text style={styles.sizeText}> Choose a size</Text>
                   <View
