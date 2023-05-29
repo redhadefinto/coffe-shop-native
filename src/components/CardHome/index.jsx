@@ -2,42 +2,42 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  ImageBackground,
+  Pressable,
   Image,
+  ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
-import LoadingBrown from '../LoadingBrown';
 import iconPensil from '../../assets/icon/pensil.png';
+// import Sample from "../assets/images/product.png"
 
-const CardHome = ({title, price, image, id, role_id, discount}) => {
-  // console.log(image);
+const CardProduct = ({image, name, price, id, discount, role_id}) => {
   const navigation = useNavigation();
+  const random = Math.floor(100000 + Math.random() * 900000);
   const costing = price => {
-    return parseFloat(price)
-      .toFixed()
-      .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+    return (
+      'IDR ' +
+      parseFloat(price)
+        .toFixed()
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+    );
   };
   return (
-    <TouchableOpacity
-      style={styles.containerProduct}
+    <Pressable
+      style={styles.card}
       onPress={() =>
         navigation.navigate('ProductDetail', {
           prodId: id,
           discount: discount || null,
         })
       }>
-      <View style={styles.containerImage}>
-        {!image ? (
-          <LoadingBrown />
-        ) : (
-          <ImageBackground
-            source={{uri: image}}
-            style={styles.productImage}
-            resizeMode="cover"
-          />
-        )}
+      <View style={styles.containerImage} key={random}>
+        <ImageBackground
+          source={{uri: image}}
+          style={styles.imageCard}
+          resizeMode="cover"
+        />
       </View>
       {discount && (
         <View style={styles.containerDiscount}>
@@ -58,84 +58,114 @@ const CardHome = ({title, price, image, id, role_id, discount}) => {
           }}>
           <ImageBackground
             source={iconPensil}
-            style={{width: 25, height: 25}}
+            style={{width: 15, height: 15}}
             resizeMode="cover"
           />
         </TouchableOpacity>
       )}
-      <Text style={styles.productTitle}>{title}</Text>
-      <Text style={styles.productPrice}>Rp {costing(price)}</Text>
-    </TouchableOpacity>
+      <View style={styles.containerTitle}>
+        <Text style={styles.cardTitle}>{name}</Text>
+        <Text style={styles.cardPrice2}>{costing(price)}</Text>
+      </View>
+    </Pressable>
   );
 };
 
-export default CardHome;
-
 const styles = StyleSheet.create({
-  containerProduct: {
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-    paddingBottom: 20,
-    borderRadius: 30,
-    backgroundColor: '#FFFFFF',
+  card: {
+    marginTop: 50,
+    // position: 'relative',
+    backgroundColor: '#FFF',
+    width: 160,
+    height: 240,
     shadowColor: 'black',
-    shadowOffset: {width: 0, height: 3},
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    marginRight: 40,
-    height: 300,
-    marginTop: 30,
-  },
-  productTitle: {
-    color: 'black',
-    fontSize: 24,
-    fontWeight: '900',
-    width: '80%',
-    textAlign: 'center',
-    marginTop: 5,
-  },
-  productPrice: {
-    color: '#6A4029',
-    fontSize: 20,
-    fontWeight: '900',
-    width: '80%',
-    textAlign: 'center',
-    marginTop: 5,
-  },
-  productImage: {
-    width: 170,
-    height: 170,
-    // top: '-25%',
     borderRadius: 30,
-    shadowColor: 'black',
-    shadowOffset: {width: 0, height: 3},
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    backgroundColor: 'white',
+    marginHorizontal: 15,
+    // justifyContent: 'center',
+    alignContent: 'center',
+  },
+  imageCard: {
+    width: 120,
+    height: 130,
+    // borderRadius: 20,
   },
   containerImage: {
-    height: 170,
-    width: 170,
-    // width: '100%',
+    width: 120,
+    height: 130,
+    // borderWidth: 2,
+    position: 'relative',
+    left: '13%',
+    top: -35,
+    overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,
-    // borderWidth: 2,
+  },
+  containerPromo: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    right: 10,
+    top: 1,
+    borderRadius: 20,
+    width: '50%',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  containerTitle: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     position: 'relative',
-    top: '-10%',
-    overflow: 'hidden',
+    top: -10,
+  },
+  cardTitle: {
+    // fontFamily: "Poppins-Bold",
+    fontWeight: 'bold',
+    fontSize: 19,
+    color: 'black',
+    textAlign: 'center',
+    width: '70%',
+    lineHeight: 22.29,
+  },
+  cardPrice: {
+    // fontFamily: 'Poppins-Bold',
+    position: 'absolute',
+    top: 40,
+    fontWeight: 'bold',
+    fontSize: 17,
+    color: 'grey',
+    textDecorationLine: 'line-through',
+  },
+  cardPrice2: {
+    fontFamily: 'Poppins-Bold',
+    position: 'absolute',
+    top: 70,
+    fontWeight: 'bold',
+    fontSize: 17,
+    color: '#6A4029',
+  },
+  textPromo: {
+    fontFamily: 'Poppins-Reguler',
+    color: 'black',
+    fontWeight: '700',
+    fontSize: 30,
   },
   containerIconPencil: {
-    width: 50,
-    height: 50,
+    width: 30,
+    height: 30,
     backgroundColor: '#6A4029',
     position: 'absolute',
     borderRadius: 10000,
-    right: 0,
+    // right: 0,
+    left: 0,
+    // top: -30,
+    bottom: 0,
+    right: -20,
+    zIndex: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -164,3 +194,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
+
+export default CardProduct;

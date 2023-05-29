@@ -136,7 +136,18 @@ Project Link: [https://github.com/redhadefinto/coffe_shop_fe](https://github.com
 <img width="500" src="./public/profile-page.png" alt="Landing page">
 <img width="500" src="./public/product-page.png" alt="Landing page">
 <img width="500" src="./public/order-page.png" alt="Landing page"> -->
-<p>DEVELOPMENT</p>
+<!-- <p>DEVELOPMENT</p> -->
+<div>
+<img width="200" src="./public/splash-screen.jpg" alt="splash-screen">
+<img width="200" src="./public/home-screen.jpg" alt="splash-screen">
+<img width="200" src="./public/product-screen.jpg" alt="splash-screen">
+<img width="200" src="./public/product-detail-screen.jpg" alt="splash-screen">
+</div>
+<div>
+<img width="200" src="./public/cart-screen.jpg" alt="splash-screen">
+<img width="200" src="./public/chat-screen.jpg" alt="splash-screen">
+<img width="200" src="./public/profile-page.jpg" alt="splash-screen">
+</div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

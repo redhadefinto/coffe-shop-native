@@ -156,7 +156,7 @@ const ProductDetail = () => {
         ) : (
           datas.map((data, idx) => {
             return (
-              <View key={idx}>
+              <View key={idx} style={{}}>
                 <View style={styles.price}>
                   {discount && (
                     <View style={styles.containerDiscount}>

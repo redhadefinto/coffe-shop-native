@@ -75,8 +75,16 @@ const Cart = () => {
       </View>
       <View style={{paddingTop: 40}}>
         {cartState.length === 0 ? (
-          <View>
-            <Text>No orders yet</Text>
+          <View style={styles.notOrder}>
+            <IconComunity
+              name="cart-outline"
+              size={45}
+              style={styles.icon}
+              onPress={() => {
+                navigation.navigate('Cart');
+              }}
+            />
+            <Text style={styles.textNot}>No Orders Yet</Text>
           </View>
         ) : (
           cartState.map((data, idx) => {

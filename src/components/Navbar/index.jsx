@@ -33,7 +33,7 @@ export default Navbar;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: '10%',
+    height: '6%',
     borderColor: 'black',
     justifyContent: 'space-between',
     alignContent: 'center',

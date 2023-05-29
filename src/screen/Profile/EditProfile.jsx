@@ -220,9 +220,9 @@ const EditProfile = () => {
         message: 'Update Success',
         type: 'success',
       });
-      seTimeOut(() => {
+      if (getProfileUpdate) {
         navigation.goBack();
-      }, 1000);
+      }
     } catch (error) {
       setDataImage();
       console.log('console dari error', error.response.data.msg);
@@ -261,7 +261,7 @@ const EditProfile = () => {
       };
       const result = await patchProfile(body, token, controller);
       // if (!result) return;
-      console.log('update image', result);
+      // console.log('update image', result);
       if (result) {
         showMessage({
           message: 'update Succes',

@@ -62,7 +62,7 @@ const Login = () => {
           type: 'danger',
         });
       }
-      const profile = dispatch(
+      const profile = await dispatch(
         profileAction.getProfileThunk({
           controllerProfile,
           token: result.payload.token,

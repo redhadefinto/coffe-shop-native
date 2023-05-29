@@ -29,6 +29,9 @@ import privateRoute from '../../utils/wrapper/private.route';
 
 import {BackHandler} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
+import CardProduct from '../../components/CardProduct';
+
+// CardProduct
 
 const HomePage = ({navigation}) => {
   const [borderSearch, setBorderSearch] = useState(false);
@@ -116,12 +119,12 @@ const HomePage = ({navigation}) => {
       })
       .finally(() => setLoading(false));
   }, [token, categories]);
-  useEffect(() => {
-    navigation.navigate('ProductAll', {
-      search,
-      categories,
-    });
-  }, [categories, search]);
+  // useEffect(() => {
+  //   navigation.navigate('ProductAll', {
+  //     search,
+  //     categories,
+  //   });
+  // }, [categories, search]);
   const debounceHandler = useCallback(
     debounce(text => {
       console.log(text);
@@ -133,7 +136,8 @@ const HomePage = ({navigation}) => {
     // if (!text) return;
     debounceHandler(text);
   };
-  console.log(cek);
+  // console.log(cek);
+  // console.log(profileUser);
   // console.log(dataProduct);
   return (
     <ScrollView style={styles.container}>
@@ -239,7 +243,7 @@ const HomePage = ({navigation}) => {
             <View
               style={{
                 width: 350,
-                height: '80%',
+                height: '40%',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -249,7 +253,7 @@ const HomePage = ({navigation}) => {
             dataProduct.map((data, idx) => {
               return (
                 <CardHome
-                  title={data.product_name}
+                  name={data.product_name}
                   image={data.image}
                   price={data.price}
                   key={idx}
@@ -319,17 +323,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingLeft: 40,
-    minHeight: '200%',
+    minHeight: '250%',
     paddingBottom: '45%',
+    // borderWidth: 9,
   },
   mainContainer: {
-    marginTop: 20,
+    marginTop: 15,
     flex: 1,
     position: 'relative',
-    // minHeight: 700,
+    // minHeight: 1200,
     // paddingBottom: '25%',
     // paddingBottom: '45%',
-    marginBottom: 100,
+    // marginBottom: 100,
+    // paddingBottom: 200,
+    // borderWidth: 2,
   },
   textActive: {
     color: '#6A4029',
@@ -342,7 +349,7 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
   containerSearch: {
-    width: '80%',
+    width: '100%',
     backgroundColor: '#fafafa',
     marginTop: 20,
     borderRadius: 50,
@@ -359,6 +366,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     fontWeight: '900',
     borderRadius: 50,
+    color: 'black',
   },
   searchIcon: {
     width: 30,
@@ -389,18 +397,25 @@ const styles = StyleSheet.create({
     paddingRight: 40,
   },
   containerProductMain: {
-    marginTop: 20,
+    marginTop: 10,
     minWidth: '100%',
-    height: 400,
+    minHeight: 900,
     flexDirection: 'row',
     overflow: 'scroll',
+    // gap: 20,
+    // marginBottom: 100,
+    // paddingBottom: 30,
+    // borderWidth: 9,
+    // borderEndWidth: 2,
+    // marginBottom: 30,
   },
   containerProduct: {
-    position: 'relative',
+    // position: 'relative',
+    paddingTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 15,
-    paddingBottom: 20,
+    paddingBottom: 50,
     borderRadius: 30,
     backgroundColor: '#FFFFFF',
     shadowColor: 'black',
@@ -442,7 +457,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,
-    // borderWidth: 2,
+    borderWidth: 2,
     position: 'relative',
     top: '-10%',
     overflow: 'hidden',
@@ -459,7 +474,7 @@ const styles = StyleSheet.create({
   },
   containerAddProduct: {
     Height: 400,
-    borderWidth: 2,
+    // borderWidth: 2,
     position: 'relative',
     width: '100%',
     justifyContent: 'center',
@@ -526,8 +541,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     // alignItems: 'center',
     // borderWidth: 2,
-    bottom: 70,
-    right: 15,
+    bottom: 510,
+    right: 10,
+    zIndex: 50,
     // marginBottom: 100,
   },
 });

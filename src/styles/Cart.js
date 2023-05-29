@@ -99,5 +99,20 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'black',
   },
+  notOrder: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 130,
+    gap: 10,
+  },
+  textNot: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 19,
+    color: 'black',
+  },
+  icon: {
+    color: 'black',
+  },
 });
 export default styles;

@@ -236,7 +236,7 @@ const ProductAll = () => {
         ) : (
           <>
             <FlatList
-              style={{width: '100%'}}
+              style={{flex: 1}}
               data={dataProduct}
               renderItem={({item, index}) => (
                 <View style={styles.cardContainer} key={index}>
@@ -254,20 +254,28 @@ const ProductAll = () => {
               numColumns={2}
               onEndReached={handlePage}
               onEndReachedThreshold={0.1}
+              ListFooterComponent={() =>
+                loadingScroll ? (
+                  <View>
+                    <ActivityIndicator size="large" color="#6A4029" />
+                  </View>
+                ) : (
+                  endPage && (
+                    <View
+                      style={{justifyContent: 'center', alignItems: 'center'}}>
+                      <Text
+                        style={{
+                          color: '#6A4029',
+                          fontSize: 18,
+                          fontWeight: '900',
+                        }}>
+                        End Page
+                      </Text>
+                    </View>
+                  )
+                )
+              }
             />
-            {loadingScroll && (
-              <View>
-                <ActivityIndicator size="large" color="#6A4029" />
-              </View>
-            )}
-            {endPage && (
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Text
-                  style={{color: '#6A4029', fontSize: 18, fontWeight: '900'}}>
-                  End Page
-                </Text>
-              </View>
-            )}
           </>
         )}
       </View>
@@ -305,13 +313,13 @@ const styles = StyleSheet.create({
   cardContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: '3%',
-    // borderWidth: 2,
+    // paddingHorizontal: '3%',
     paddingTop: 16,
     paddingBottom: 40,
-    gap: 2,
   },
+
   categoryText: {
     color: 'black',
     fontFamily: 'Poppins-Bold',
