@@ -155,7 +155,7 @@ function Profile() {
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                    <Text style={{fontFamily: 'Poppins-Bold'}}>
+                    <Text style={{fontFamily: 'Poppins-Bold', color: 'black'}}>
                       Nothing Transactions Here
                     </Text>
                   </View>
