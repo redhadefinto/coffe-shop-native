@@ -79,7 +79,7 @@ $ npm install
 Configure .env file by create file named .env inside project folder and add this line to the file:
 
 ```
-SERVER_HOST = https://example.com
+SERVER_HOST = [https://coffe-shop-gamma.vercel.app/](https://coffe-shop-gamma.vercel.app/)
 
 ```
 
@@ -101,16 +101,6 @@ SERVER_HOST = https://example.com
 
 <!-- USAGE EXAMPLES -->
 
-<!-- CONTACT -->
-
-## Contact
-
-Redha Definto - redhadefinto28@gmail.com
-
-Project Link: [https://github.com/redhadefinto/coffe_shop_fe](https://github.com/redhadefinto/coffe_shop_fe)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ## Documentation
 
 <div>
@@ -124,6 +114,16 @@ Project Link: [https://github.com/redhadefinto/coffe_shop_fe](https://github.com
 <img width="200" src="./public/chat-screen.jpg" alt="splash-screen">
 <img width="200" src="./public/profile-page.jpg" alt="splash-screen">
 </div>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONTACT -->
+
+## Contact
+
+Redha Definto - redhadefinto28@gmail.com
+
+Project Link: [https://github.com/redhadefinto/coffe_shop_fe](https://github.com/redhadefinto/coffe_shop_fe)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
