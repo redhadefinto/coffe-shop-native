@@ -39,9 +39,6 @@
 
 ## About The Project
 
-<!-- ![Product Name Screen Shot][product-screenshot] -->
-<!-- <img width="900" src="./public/index.png" alt="display-documentation"> -->
-
 "Our coffee shop web application brings the delightful experience of a café to your screen. Discover an extensive menu of coffee and tea specialties, explore personalized recommendations, place orders with ease, and enjoy the convenience of online payment and delivery options. Immerse yourself in a virtual coffee shop ambiance, where you can connect with fellow coffee enthusiasts, learn about the origins of different brews, and stay updated on upcoming events and promotions. Whether you're seeking a quick pick-me-up or a relaxing coffee break, our web application ensures a seamless and enjoyable coffee shop experience from the comfort of your own device."
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -102,12 +99,6 @@ SERVER_HOST = https://example.com
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Link Download
-
-[Download APP](https://drive.google.com/drive/folders/18ztfyUowhVoFHVjp7wfdCmno0X1-wDZa)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- USAGE EXAMPLES -->
 
 <!-- CONTACT -->
@@ -120,23 +111,8 @@ Project Link: [https://github.com/redhadefinto/coffe_shop_fe](https://github.com
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- ACKNOWLEDGMENTS -->
-
-## Acknowledgments
-
-- [React](https://reactjs.org/)
-- [Redux](https://redux.js.org/)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ## Documentation
 
-<!-- <img width="500" src="./public/landing-page.png" alt="Landing page">
-<img width="500" src="./public/login-page.png" alt="Landing page">
-<img width="500" src="./public/profile-page.png" alt="Landing page">
-<img width="500" src="./public/product-page.png" alt="Landing page">
-<img width="500" src="./public/order-page.png" alt="Landing page"> -->
-<!-- <p>DEVELOPMENT</p> -->
 <div>
 <img width="200" src="./public/splash-screen.jpg" alt="splash-screen">
 <img width="200" src="./public/home-screen.jpg" alt="splash-screen">
@@ -148,6 +124,12 @@ Project Link: [https://github.com/redhadefinto/coffe_shop_fe](https://github.com
 <img width="200" src="./public/chat-screen.jpg" alt="splash-screen">
 <img width="200" src="./public/profile-page.jpg" alt="splash-screen">
 </div>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Link Download
+
+[Download APP](https://drive.google.com/drive/folders/18ztfyUowhVoFHVjp7wfdCmno0X1-wDZa)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
