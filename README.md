@@ -46,9 +46,8 @@
 ### Built With
 
 <p align="center">
-  <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=react,css,redux,babel,firebase" />
-  </a>
+  - [![React][React.js]][React-url]
+  - [![Redux][Redux]][Redux-url]
 </p>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
