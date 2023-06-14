@@ -45,10 +45,9 @@
 
 ### Built With
 
-<p align="center">
   - [![React][React.js]][React-url]
   - [![Redux][Redux]][Redux-url]
-</p>
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
