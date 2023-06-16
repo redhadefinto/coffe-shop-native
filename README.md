@@ -131,6 +131,11 @@ Project Link: [https://github.com/redhadefinto/coffe_shop_fe](https://github.com
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## 𓆙 Related-Project
+
+- [FRONT-END](https://github.com/redhadefinto/coffeein_fe)
+- [BACK-END](https://github.com/redhadefinto/coffeein_be)
+
 <!-- Contributor -->
 
 ## Contributor
