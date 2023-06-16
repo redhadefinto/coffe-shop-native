@@ -115,19 +115,17 @@ SERVER_HOST = [https://coffe-shop-gamma.vercel.app/](https://coffe-shop-gamma.ve
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Link Download
+
+[Download APP](https://drive.google.com/drive/folders/18ztfyUowhVoFHVjp7wfdCmno0X1-wDZa)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- CONTACT -->
 
 ## Contact
 
 Redha Definto - redhadefinto28@gmail.com
-
-Project Link: [https://github.com/redhadefinto/coffe_shop_fe](https://github.com/redhadefinto/coffe_shop_fe)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## Link Download
-
-[Download APP](https://drive.google.com/drive/folders/18ztfyUowhVoFHVjp7wfdCmno0X1-wDZa)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
