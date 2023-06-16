@@ -131,7 +131,7 @@ Redha Definto - redhadefinto28@gmail.com
 
 ## 𓆙 Related-Project
 
-- [FRONT-END](https://github.com/redhadefinto/coffeein_fe)
+- [FRONT-END (Web)](https://github.com/redhadefinto/coffeein_fe)
 - [BACK-END](https://github.com/redhadefinto/coffeein_be)
 
 <!-- Contributor -->
